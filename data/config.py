@@ -1,6 +1,7 @@
-import os
+from environs import Env
 
-from dotenv import load_dotenv
+env = Env()
+env.read_env()
 
-load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = env("BOT_TOKEN")
+ADMINS_ID = env.list("ADMINS_ID")
