@@ -2,12 +2,14 @@ from loader import bot
 
 
 async def on_startup(dp):
-    from utils.notify_admins import on_startup_notify
+    from utils.notify_admins import on_startup_notify, on_shutdown_notify
 
     await on_startup_notify(dp)
 
 
 async def on_shutdown(dp):
+    from utils.notify_admins import on_shutdown_notify
+    await on_shutdown_notify(dp)
     await bot.close()
 
 
