@@ -38,5 +38,5 @@ class ThrottlingMiddleware(BaseMiddleware):
         if throttled.exceeded_count == 2:
             await message.reply('Слишком Часто! Давай не так быстро')
         elif throttled.exceeded_count == 3:
-            await message.reply("Всё. Больше не отвечу, пока не пройдет 10 сек")
+            await message.reply("Всё. Больше не отвечу, пока не пройдет 5 сек")
         await asyncio.sleep(delta)

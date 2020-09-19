@@ -6,10 +6,13 @@ from aiogram.types import Message
 
 from loader import dp, bot
 from states.start_for_new_user import Start
+from keyboards.default import menu
+from utils.misc import rate_limit
 
 #for admin
 from data.config import MAIN_ADMIN
 
+@rate_limit(limit=5)
 @dp.message_handler(Command("start"))
 async def show_menu(message: Message):
     await message.answer("Привет! Я вижу ты здесь впервые!\n"
@@ -56,18 +59,17 @@ async def set_russian_word(message: Message, state: FSMContext):
     english_word = data.get("english_word")
     russian_word = data.get("russian_word")
 
-
     await asyncio.sleep(2)
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"
                          f"Перевод:\n{english_word} - {russian_word}")
 
     await asyncio.sleep(1)
     await message.answer("Теперь ты можешь сам управлять своим переводчиком!\n"
-                         "Напиши /menu чтобы посмотреть список команд.")
+                         "Напиши /menu чтобы посмотреть список команд.", reply_markup=menu)
 
     await state.finish()
 
-    if message.from_user.id != MAIN_ADMIN:
+    if str(message.from_user.id) != str(MAIN_ADMIN):
         await bot.send_message(MAIN_ADMIN, text=f"{message.from_user.first_name} "
                                                 f"{message.from_user.last_name} "
                                                 f"{message.from_user.id}:\n"
