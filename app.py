@@ -2,8 +2,10 @@ from loader import bot
 
 
 async def on_startup(dp):
-    from utils.notify_admins import on_startup_notify, on_shutdown_notify
+    from utils.notify_admins import on_startup_notify
+    import middlewares
 
+    middlewares.setup(dp)
     await on_startup_notify(dp)
 
 
