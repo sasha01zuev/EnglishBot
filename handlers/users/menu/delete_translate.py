@@ -1,11 +1,11 @@
 from aiogram.dispatcher.filters import Text
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message
 
 from loader import dp
-from utils.misc import rate_limit
+
+from keyboards.inline.delete_translate_buttons import delete_translate_keyboard
 
 
-@rate_limit(limit=5)
 @dp.message_handler(Text("Удалить перевод"))
 async def delete_translate(message: Message):
-    await message.answer(f"Твой выбор - {message.text}.", reply_markup=ReplyKeyboardRemove())
+    await message.answer("Удаление бота", reply_markup=delete_translate_keyboard)

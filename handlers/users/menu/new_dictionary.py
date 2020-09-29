@@ -8,7 +8,6 @@ from keyboards.default import menu
 from loader import dp
 
 
-
 @dp.message_handler(Text("Новый словарь"))
 async def new_dictionary(message: Message):
     await message.answer("Напиши название своего словаря", reply_markup=ReplyKeyboardRemove())

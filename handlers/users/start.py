@@ -12,6 +12,7 @@ from utils.misc import rate_limit
 #for admin
 from data.config import MAIN_ADMIN
 
+
 @rate_limit(limit=5)
 @dp.message_handler(Command("start"))
 async def show_menu(message: Message):
@@ -28,10 +29,6 @@ async def show_menu(message: Message):
                          "По умолчанию - Dictionary 1")
 
     await Start.SetDictionary.set()
-
-
-
-
 
 
 @dp.message_handler(state=Start.SetDictionary)
