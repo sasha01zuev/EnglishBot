@@ -28,12 +28,12 @@ async def show_menu(message: Message):
         await message.answer(f"Привет, {message.from_user.first_name}! Я вижу ты здесь впервые!\n"
                              "Tы можешь прочитать в описании зачем я exist.\n"
                              "Кстати exist - существовать\n")
-        # await asyncio.sleep(5)
+        await asyncio.sleep(5)
         await message.answer("Ладно, перейдем к делу ...")
-        # await asyncio.sleep(3)
+        await asyncio.sleep(3)
         await message.answer("Для начала тебе нужно добавить свой первый словарь.\n"
                              "Давай я тебе помогу!")
-        # await asyncio.sleep(4.5)
+        await asyncio.sleep(4.5)
         await message.answer("Напиши название своего словаря.\n"
                              "По умолчанию - Dictionary 1")
 
@@ -47,7 +47,7 @@ async def show_menu(message: Message):
 async def set_dict_name(message: Message, state: FSMContext):
     await state.update_data(dict_name=message.text)
     await message.answer("Отлично! Теперь давай добавим первый перевод.")
-    # await asyncio.sleep(2)
+    await asyncio.sleep(2)
     await message.answer("Сперва введи слово на английском")
     await Start.SetEnglishWord.set()
 
@@ -76,18 +76,16 @@ async def set_russian_word(message: Message, state: FSMContext):
     await db.add_dictionary(tg_id, dict_name)
     dictionary_for_start = await db.select_dictionary_for_start(tg_id)
     await db.set_current_dictionary(tg_id, dictionary_for_start)
-    print("good3")
     current_dictionary = await db.select_current_dictionary(tg_id)
-    print("good4")
     await db.add_translate(current_dictionary, english_word, russian_word)
-    print("good5")
+
     ###########
 
-    # await asyncio.sleep(2)
+    await asyncio.sleep(2)
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"
                          f"Перевод:\n{english_word} - {russian_word}")
 
-    # await asyncio.sleep(1)
+    await asyncio.sleep(1)
     await message.answer("Теперь ты можешь сам управлять своим переводчиком!\n"
                          "Напиши /menu чтобы посмотреть список команд.", reply_markup=menu)
 
