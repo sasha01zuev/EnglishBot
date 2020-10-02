@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from states.create_new_dicitonary import CreateNewDict
 
 from keyboards.default import menu
-from loader import dp
+from loader import dp, db
 
 
 @dp.message_handler(Text("Новый словарь"))
@@ -19,5 +19,12 @@ async def set_dictionary_name(message: Message, state: FSMContext):
     await state.update_data(dictionary_name=message.text)
     data = await state.get_data()
     dictionary_name = data.get("dictionary_name")
+    tg_id = message.from_user.id
+    ########################################################################
+    #                        DATABASE Queries                              #
+    await db.add_dictionary(tg_id, dictionary_name)
+    #                                                                      #
+    ########################################################################
+
     await message.answer(f'Вы создали новый словарь под назанием "{dictionary_name}"', reply_markup=menu)
     await state.finish()

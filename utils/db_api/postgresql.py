@@ -53,6 +53,12 @@ class Database:
             """
             await self.pool.execute(sql, user_id, dictionary_id)
 
+    async def select_dictionaries(self, user_id):
+        sql = """
+        SELECT * FROM dictionaries WHERE user_id = $1;
+        """
+        return await self.pool.fetch(sql, user_id)
+
     async def select_dictionary_for_start(self, user_id):
         sql = """
         SELECT id FROM dictionaries WHERE user_id = $1;
@@ -70,3 +76,16 @@ class Database:
         INSERT INTO words(dictionary_id, english, russian) VALUES ($1, $2, $3);
         """
         await self.pool.execute(sql, dictionary_id, english, russian)
+
+    async def select_translate(self, dictionary_id, word):
+        sql = """
+        SELECT * FROM words WHERE ((dictionary_id = $1) 
+        AND (lower(english) = LOWER($2) OR lower(russian) = LOWER($2)));
+        """
+        return await self.pool.fetch(sql, dictionary_id, word)
+
+    async def delete_translate(self, dictionary_id, word):
+        sql = """
+        DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 OR russian = $2));
+        """
+        await self.pool.execute(sql, dictionary_id, word)

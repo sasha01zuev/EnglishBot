@@ -1,11 +1,12 @@
+import asyncio
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, ReplyKeyboardRemove
-
+import asyncpg
 from aiogram.dispatcher import FSMContext
 from states.create_new_translate import CreateNewTranslate
 
 from keyboards.default import menu
-from loader import dp
+from loader import dp, db
 
 
 @dp.message_handler(Text("Новый перевод"))
@@ -28,6 +29,14 @@ async def set_russian_word(message: Message, state: FSMContext):
     dict_name = data.get("dict_name")
     english_word = data.get("english_word")
     russian_word = data.get("russian_word")
+    tg_id = message.from_user.id
+
+    ########################################################################
+    #                        DATABASE Queries                              #
+    current_dictionary = await db.select_current_dictionary(tg_id)
+    await db.add_translate(current_dictionary, english_word, russian_word)
+    #                                                                      #
+    ########################################################################
     await message.answer(f"Добавлен новый перевод:\n"
                          f"{english_word} - {russian_word}", reply_markup=menu)
     await state.finish()
