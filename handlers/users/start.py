@@ -4,10 +4,12 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
-from loader import dp, bot
+from loader import dp, bot, db
 from states.start_for_new_user import Start
 from keyboards.default import menu
 from utils.misc import rate_limit
+from datetime import datetime
+import asyncpg
 
 #for admin
 from data.config import MAIN_ADMIN
@@ -16,26 +18,36 @@ from data.config import MAIN_ADMIN
 @rate_limit(limit=5)
 @dp.message_handler(Command("start"))
 async def show_menu(message: Message):
-    await message.answer("Привет! Я вижу ты здесь впервые!\n"
-                         "Tы можешь прочитать в описании зачем я exist.\n"
-                         "Кстати exist - существовать\n")
-    await asyncio.sleep(5)
-    await message.answer("Ладно, перейдем к делу ...")
-    await asyncio.sleep(3)
-    await message.answer("Для начала тебе нужно добавить свой первый словарь.\n"
-                         "Давай я тебе помогу!")
-    await asyncio.sleep(4.5)
-    await message.answer("Напиши название своего словаря.\n"
-                         "По умолчанию - Dictionary 1")
+    first_name = message.from_user.first_name
+    full_name = message.from_user.full_name
+    tg_id = message.from_user.id
+    current_time = datetime.now()
 
-    await Start.SetDictionary.set()
+    try:
+        await db.add_user(tg_id, first_name, full_name, current_time, current_time)
+        await message.answer(f"Привет, {message.from_user.first_name}! Я вижу ты здесь впервые!\n"
+                             "Tы можешь прочитать в описании зачем я exist.\n"
+                             "Кстати exist - существовать\n")
+        # await asyncio.sleep(5)
+        await message.answer("Ладно, перейдем к делу ...")
+        # await asyncio.sleep(3)
+        await message.answer("Для начала тебе нужно добавить свой первый словарь.\n"
+                             "Давай я тебе помогу!")
+        # await asyncio.sleep(4.5)
+        await message.answer("Напиши название своего словаря.\n"
+                             "По умолчанию - Dictionary 1")
+
+        await Start.SetDictionary.set()
+
+    except asyncpg.exceptions.UniqueViolationError:
+        await message.answer("Вы уже зарегистрированы!", reply_markup=menu)
 
 
 @dp.message_handler(state=Start.SetDictionary)
 async def set_dict_name(message: Message, state: FSMContext):
     await state.update_data(dict_name=message.text)
     await message.answer("Отлично! Теперь давай добавим первый перевод.")
-    await asyncio.sleep(2)
+    # await asyncio.sleep(2)
     await message.answer("Сперва введи слово на английском")
     await Start.SetEnglishWord.set()
 
@@ -55,12 +67,27 @@ async def set_russian_word(message: Message, state: FSMContext):
     dict_name = data.get("dict_name")
     english_word = data.get("english_word")
     russian_word = data.get("russian_word")
+    tg_id = message.from_user.id
 
-    await asyncio.sleep(2)
+
+
+    ###########
+    # DATABASE queries
+    await db.add_dictionary(tg_id, dict_name)
+    dictionary_for_start = await db.select_dictionary_for_start(tg_id)
+    await db.set_current_dictionary(tg_id, dictionary_for_start)
+    print("good3")
+    current_dictionary = await db.select_current_dictionary(tg_id)
+    print("good4")
+    await db.add_translate(current_dictionary, english_word, russian_word)
+    print("good5")
+    ###########
+
+    # await asyncio.sleep(2)
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"
                          f"Перевод:\n{english_word} - {russian_word}")
 
-    await asyncio.sleep(1)
+    # await asyncio.sleep(1)
     await message.answer("Теперь ты можешь сам управлять своим переводчиком!\n"
                          "Напиши /menu чтобы посмотреть список команд.", reply_markup=menu)
 
