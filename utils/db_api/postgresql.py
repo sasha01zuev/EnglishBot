@@ -59,6 +59,12 @@ class Database:
         """
         return await self.pool.fetch(sql, user_id)
 
+    async def select_last_10_translates(self, dictionary_id):
+        sql = """
+        SELECT * FROM words WHERE dictionary_id = $1 LIMIT 10;
+        """
+        return await self.pool.fetch(sql, dictionary_id)
+
     async def select_dictionary_for_start(self, user_id):
         sql = """
         SELECT id FROM dictionaries WHERE user_id = $1;
@@ -84,8 +90,20 @@ class Database:
         """
         return await self.pool.fetch(sql, dictionary_id, word)
 
+    async def select_last_translate(self, dictionary_id):
+        sql = """
+        SELECT * FROM words WHERE dictionary_id = $1 LIMIT 1;
+        """
+        await self.pool.execute(sql, dictionary_id)
+
     async def delete_translate(self, dictionary_id, word):
         sql = """
         DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 OR russian = $2));
         """
         await self.pool.execute(sql, dictionary_id, word)
+
+    async def delete_translate_accurate(self, dictionary_id, english_word, russian_word):
+        sql = """
+        DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 AND russian = $3));
+        """
+        await self.pool.execute(sql, dictionary_id, english_word, russian_word)

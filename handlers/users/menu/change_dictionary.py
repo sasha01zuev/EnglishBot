@@ -12,10 +12,12 @@ async def change_dictionary(message: Message):
     tg_id = message.from_user.id
     select_dictionaries = await db.select_dictionaries(tg_id)
     await message.answer(f"Выбиери словарь из списка:", reply_markup=InlineKeyboardMarkup(
-        inline_keyboard=[[InlineKeyboardMarkup(text=item[2],
-                                               callback_data=select_dictionary_callback.new(dictionary_id=item[0],
-                                                                                            dictionary_name=item[2]))]
-                         for item in select_dictionaries]
+        inline_keyboard=[
+            [InlineKeyboardButton(
+                text=item[2],
+                callback_data=select_dictionary_callback.new(
+                    dictionary_id=item[0],
+                    dictionary_name=item[2]))] for item in select_dictionaries]
     ))
 
 
@@ -30,7 +32,5 @@ async def write_word(call: CallbackQuery, callback_data: dict):
     ########################################################################
     #                        DATABASE Queries                              #
     await db.set_current_dictionary(tg_id, id_selected_dictionary)
-    #                                                                      #
     ########################################################################
     await call.message.answer(f"Выбран словарь '{name_selected_dictionary}'")
-

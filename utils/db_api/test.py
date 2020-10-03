@@ -14,9 +14,11 @@ async def test():
     # print(select_dictionaries[0][1])
     # print([[name[0], name[1]] for name in select_dictionaries])
 
-    # current_dictionary = await db.select_current_dictionary(609200395)
+    current_dictionary = await db.select_current_dictionary(609200395)
     # translate = await db.select_translate(current_dictionary, word='fak')
     # print(translate)
+    last_translate = await db.select_last_translate(current_dictionary)
+    print(last_translate)
     print("Success!")
 
 

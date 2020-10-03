@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
 from aiogram.dispatcher import FSMContext
 
-from keyboards.inline.delete_translate_buttons import delete_translate_callback, delete_translate_keyboard
+from keyboards.inline.delete_translate_buttons import delete_translate_callback, menu_delete_translate_keyboard
 from keyboards.inline.confirm_buttons import confirm_keyboard, confirm_callback
 from loader import dp, db
 from states.delete_inputted_translate import DeleteInputtedTranslate
