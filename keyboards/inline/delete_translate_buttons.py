@@ -5,12 +5,12 @@ menu_delete_translate_keyboard = InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="Последнее добавленое слово",
+            InlineKeyboardButton(text="Последнеий добавленый перевод",
                                  callback_data=delete_translate_callback.new(
                                      item="last_added_word"))
         ],
         [
-            InlineKeyboardButton(text="Выбрать из 10 последних слов",
+            InlineKeyboardButton(text="Выбрать из 10 последних переводов",
                                  callback_data=delete_translate_callback.new(
                                      item="last_10_added_words"))
         ],

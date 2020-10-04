@@ -92,9 +92,9 @@ class Database:
 
     async def select_last_translate(self, dictionary_id):
         sql = """
-        SELECT * FROM words WHERE dictionary_id = $1 LIMIT 1;
+        SELECT * FROM words WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 1;
         """
-        await self.pool.execute(sql, dictionary_id)
+        return await self.pool.fetchrow(sql, dictionary_id)
 
     async def delete_translate(self, dictionary_id, word):
         sql = """

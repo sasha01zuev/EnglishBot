@@ -2,3 +2,4 @@ from .start_for_new_user import Start
 from .create_new_dicitonary import CreateNewDict
 from .create_new_translate import CreateNewTranslate
 from .delete_inputted_translate import DeleteInputtedTranslate
+from .delete_last_translate import DeleteLastTranslate
