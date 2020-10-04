@@ -18,7 +18,7 @@ async def write_word(call: CallbackQuery, callback_data: dict):
 
 
 @dp.message_handler(state=DeleteInputtedTranslate.InputWord)
-async def check_deletion(message: Message, state: FSMContext):
+async def confirm_deletion(message: Message, state: FSMContext):
     await state.update_data(word_name=message.text)
     tg_id = message.from_user.id
 
@@ -37,6 +37,10 @@ async def check_deletion(message: Message, state: FSMContext):
                              reply_markup=confirm_keyboard)
     except IndexError:
         await message.answer("В этом словаре перевод не найден!")
+        await state.finish()
+
+    except Exception as exc:
+        await message.answer(f"Неизвестная ошибка!\n{exc}")
         await state.finish()
 
 
@@ -65,7 +69,7 @@ async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteInputtedTranslate.InputWord)
-async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def cancel_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.answer(cache_time=5)
     await state.finish()
     await call.message.delete()

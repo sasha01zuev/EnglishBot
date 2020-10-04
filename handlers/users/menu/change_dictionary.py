@@ -4,6 +4,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import dp, db
 from utils.misc import rate_limit
 from keyboards.inline.callback_data import select_dictionary_callback
+from keyboards.inline.buttons.cancel_button import cancel_button
+from keyboards.inline.callback_data import cancel_button_callback
 
 
 @rate_limit(limit=5)
@@ -11,14 +13,24 @@ from keyboards.inline.callback_data import select_dictionary_callback
 async def change_dictionary(message: Message):
     tg_id = message.from_user.id
     select_dictionaries = await db.select_dictionaries(tg_id)
-    await message.answer(f"Выбиери словарь из списка:", reply_markup=InlineKeyboardMarkup(
+
+    show_dictionaries_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(
                 text=item[2],
                 callback_data=select_dictionary_callback.new(
                     dictionary_id=item[0],
                     dictionary_name=item[2]))] for item in select_dictionaries]
-    ))
+    )
+    show_dictionaries_keyboard.add(cancel_button)
+
+    await message.answer(f"Выбиери словарь из списка:", reply_markup=show_dictionaries_keyboard)
+
+
+@dp.callback_query_handler(cancel_button_callback.filter(state='True'))
+async def cancel_choose_button(call: CallbackQuery):
+    await call.answer(cache_time=5)
+    await call.message.delete()
 
 
 @dp.callback_query_handler(select_dictionary_callback.filter())

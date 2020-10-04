@@ -6,10 +6,12 @@ from loader import dp, db
 from keyboards.inline.confirm_buttons import confirm_keyboard
 from keyboards.inline.callback_data import select_translate_callback, confirm_callback
 from states.delete_translate import DeleteTranslate
+from keyboards.inline.buttons.cancel_button import cancel_button
+from keyboards.inline.callback_data import cancel_button_callback
 
 
 @dp.callback_query_handler(delete_translate_callback.filter(item="last_10_added_words"))
-async def delete_last_10_word(call: CallbackQuery, callback_data: dict):
+async def delete_last_10_translates(call: CallbackQuery):
     await call.message.delete()
     await call.answer(cache_time=5)
     tg_id = call.from_user.id
@@ -20,21 +22,34 @@ async def delete_last_10_word(call: CallbackQuery, callback_data: dict):
     last_10_translates = await db.select_last_10_translates(current_dictionary)
     ############################################################################
 
-    await call.message.answer(f'Последние 10 слов:', reply_markup=InlineKeyboardMarkup(
+    show_last_10th_translates_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=f'{item[1]} - {item[2]}',
-                                  callback_data=select_translate_callback.new(
-                                      dictionary_id=item[0],
-                                      english_word=item[1],
-                                      russian_word=item[2]
-                                  ))] for item in last_10_translates])
-                              )
+            [InlineKeyboardButton(
+                text=f'{item[1]} - {item[2]}',
+                callback_data=select_translate_callback.new(
+                    dictionary_id=item[0],
+                    english_word=item[1],
+                    russian_word=item[2]
+                )
+            )
+            ] for item in last_10_translates
+        ]
+    )
+    show_last_10th_translates_keyboard.row(cancel_button)
 
+    await call.message.answer(f'Последние 10 слов:', reply_markup=show_last_10th_translates_keyboard)
     await DeleteTranslate.SetDeleteTranslate.set()
 
 
+@dp.callback_query_handler(cancel_button_callback.filter(state='True'), state=DeleteTranslate.SetDeleteTranslate)
+async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
+    await call.answer(cache_time=5)
+    await call.message.delete()
+    await state.finish()
+
+
 @dp.callback_query_handler(select_translate_callback.filter(), state=DeleteTranslate.SetDeleteTranslate)
-async def write_word(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def confirm_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.message.delete()
     await call.answer(cache_time=5)
 
@@ -72,7 +87,7 @@ async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteTranslate.SetDeleteTranslate)
-async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def cancel_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.answer(cache_time=5)
     await call.message.delete()
     await state.finish()
