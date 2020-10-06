@@ -34,7 +34,7 @@ async def cancel_choose_button(call: CallbackQuery):
 
 
 @dp.callback_query_handler(select_dictionary_callback.filter())
-async def write_word(call: CallbackQuery, callback_data: dict):
+async def changing_dictionary(call: CallbackQuery, callback_data: dict):
     await call.answer(cache_time=5)
     name_selected_dictionary = callback_data['dictionary_name']
     tg_id = call.from_user.id

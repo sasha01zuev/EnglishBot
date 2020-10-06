@@ -1,9 +1,9 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.inline.callback_data import confirm_callback
+from keyboards.inline.callback_data import confirm_callback, delete_translate_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard
-from keyboards.inline.delete_translate_buttons import delete_translate_callback, menu_delete_translate_keyboard
+
 from loader import dp, db
 from states.delete_last_translate import DeleteLastTranslate
 

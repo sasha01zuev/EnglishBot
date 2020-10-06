@@ -7,5 +7,5 @@ from .settings import dp
 from .settings_items.reverse_translate import dp
 from .delete_translate_items.last_word import dp
 from .delete_translate_items.last_10_translates import dp
-
+from .delete_dicitonary_items.last_dictionary import dp
 __all__ = ['dp']

@@ -107,3 +107,15 @@ class Database:
         DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 AND russian = $3));
         """
         await self.pool.execute(sql, dictionary_id, english_word, russian_word)
+
+    async def select_last_dictionary(self, tg_id):
+        sql = """
+        SELECT * FROM dictionaries WHERE user_id = $1 ORDER BY id DESC LIMIT 1;
+        """
+        return await self.pool.fetchrow(sql, tg_id)
+
+    async def delete_dictionary(self, dictionary_id):
+        sql = """
+        DELETE FROM dictionaries WHERE id = $1;
+        """
+        await self.pool.execute(sql, dictionary_id)

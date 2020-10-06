@@ -3,3 +3,4 @@ from .create_new_dicitonary import CreateNewDict
 from .create_new_translate import CreateNewTranslate
 from .delete_inputted_translate import DeleteInputtedTranslate
 from .delete_last_translate import DeleteLastTranslate
+from .delete_dictionary import DeleteDictionary
