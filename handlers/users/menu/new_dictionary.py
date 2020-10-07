@@ -26,5 +26,5 @@ async def set_dictionary_name(message: Message, state: FSMContext):
     #                                                                      #
     ########################################################################
 
-    await message.answer(f'Вы создали новый словарь под назанием "{dictionary_name}"', reply_markup=menu)
+    await message.answer(f'Вы создали новый словарь "{dictionary_name}"', reply_markup=menu)
     await state.finish()

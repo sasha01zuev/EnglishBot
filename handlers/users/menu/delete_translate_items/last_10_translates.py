@@ -88,6 +88,6 @@ async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteTranslate.SetDeleteTranslate)
 async def cancel_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.answer(cache_time=5)
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
