@@ -41,6 +41,12 @@ class Database:
         """
         await self.pool.execute(sql, user_id, name)
 
+    async def select_dictionaries(self, user_id):
+        sql = """
+        SELECT * FROM dictionaries WHERE user_id = $1;
+        """
+        return await self.pool.fetch(sql, user_id)
+
     async def set_current_dictionary(self, user_id, dictionary_id):
         try:
             sql = """
@@ -52,12 +58,6 @@ class Database:
             UPDATE current_dictionary SET dictionary_id = $2 WHERE user_id = $1;
             """
             await self.pool.execute(sql, user_id, dictionary_id)
-
-    async def select_dictionaries(self, user_id):
-        sql = """
-        SELECT * FROM dictionaries WHERE user_id = $1;
-        """
-        return await self.pool.fetch(sql, user_id)
 
     async def select_last_10_translates(self, dictionary_id):
         sql = """
@@ -119,3 +119,9 @@ class Database:
         DELETE FROM dictionaries WHERE id = $1;
         """
         await self.pool.execute(sql, dictionary_id)
+
+    async def select_dictionary(self, dictionary_id):
+        sql = """
+        SELECT * FROM  dictionaries WHERE id = $1;
+        """
+        return await self.pool.fetchrow(sql, dictionary_id)
