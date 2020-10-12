@@ -10,7 +10,11 @@ class CreateNewTranslate(StatesGroup):
     SetRussianWord = State()
 
 
-class DeleteDictionary(StatesGroup):
+class DeleteLastDictionary(StatesGroup):
+    SetDeleteDictionary = State()
+
+
+class DeleteListDictionary(StatesGroup):
     SetDeleteDictionary = State()
 
 
@@ -30,3 +34,7 @@ class Start(StatesGroup):
     SetDictionary = State()
     SetEnglishWord = State()
     SetRussianWord = State()
+
+
+class ChangeDictionary(StatesGroup):
+    SetChangeDictionary = State()

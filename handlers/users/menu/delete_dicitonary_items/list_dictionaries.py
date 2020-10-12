@@ -5,7 +5,7 @@ from keyboards.inline.buttons.cancel_button import cancel_button
 from keyboards.inline.callback_data import delete_dictionary_callback, confirm_callback, select_dictionary_callback, \
     cancel_button_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard
-from states import DeleteDictionary
+from states import DeleteListDictionary
 from loader import dp, db
 
 
@@ -35,10 +35,11 @@ async def show_list_of_dictionaries(call: CallbackQuery):
     await call.message.answer(f"Выбери словарь из списка:", reply_markup=show_dictionaries_keyboard)
 
     await call.message.delete()
-    await DeleteDictionary.SetDeleteDictionary.set()
+    await DeleteListDictionary.SetDeleteDictionary.set()
 
 
-@dp.callback_query_handler(select_dictionary_callback.filter(), state=DeleteDictionary.SetDeleteDictionary)
+@dp.callback_query_handler(select_dictionary_callback.filter(),
+                           state=DeleteListDictionary.SetDeleteDictionary)
 async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: FSMContext):
     await call.answer(cache_time=5)
     await call.message.delete()
@@ -54,16 +55,20 @@ async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: F
                                   f'"<b>{dictionary[2]}</b>" ?\n'
                                   f'Все слова записанные в этот словарь также удалаяются!',
                                   reply_markup=confirm_keyboard)
+        await state.update_data(dictionary_id=dictionary[0])
     except:
         await call.message.answer("Упс, какая-то ошибка!")
         await state.finish()
 
 
-@dp.callback_query_handler(confirm_callback.filter(item='accept'), state=DeleteDictionary.SetDeleteDictionary)
-async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: FSMContext):
+@dp.callback_query_handler(confirm_callback.filter(item='accept'),
+                           state=DeleteListDictionary.SetDeleteDictionary)
+async def deleting_dictionary(call: CallbackQuery, state: FSMContext):
     await call.answer("Удалено", cache_time=5)
     await call.message.delete()
-    dictionary_id = int(callback_data['dictionary_id'])
+
+    data = await state.get_data()
+    dictionary_id = int(data.get("dictionary_id"))
 
     #####################################################################################
     #                                 DATABASE Queries                                  #
@@ -74,14 +79,15 @@ async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: F
 
 
 @dp.callback_query_handler(cancel_button_callback.filter(state='True'),
-                           state=DeleteDictionary.SetDeleteDictionary)
+                           state=DeleteListDictionary.SetDeleteDictionary)
 async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
     await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
 
 
-@dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteDictionary.SetDeleteDictionary)
+@dp.callback_query_handler(confirm_callback.filter(item="cancel"),
+                           state=DeleteListDictionary.SetDeleteDictionary)
 async def cancel_deletion(call: CallbackQuery, state: FSMContext):
     await call.answer("Отмена", cache_time=5)
     await call.message.delete()

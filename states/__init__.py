@@ -3,5 +3,7 @@ from .states import CreateNewDict
 from .states import CreateNewTranslate
 from .states import DeleteInputtedTranslate
 from .states import DeleteLastTranslate
-from .states import DeleteDictionary
+from .states import DeleteLastDictionary
+from .states import DeleteListDictionary
 from .states import DeleteTranslate
+from .states import ChangeDictionary

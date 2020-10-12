@@ -6,7 +6,7 @@ from keyboards.inline.callback_data import delete_dictionary_callback, confirm_c
 from keyboards.inline.confirm_buttons import confirm_keyboard
 
 from loader import dp, db
-from states import DeleteDictionary
+from states import DeleteLastDictionary
 
 
 @dp.callback_query_handler(delete_dictionary_callback.filter(item="last_added_dictionary"))
@@ -25,7 +25,7 @@ async def show_last_dictionary(call: CallbackQuery):
                                   f'Все слова записанные в этот словарь также удалаяются!',
                                   reply_markup=confirm_keyboard)
 
-        await DeleteDictionary.SetDeleteDictionary.set()
+        await DeleteLastDictionary.SetDeleteDictionary.set()
 
     except TypeError:
 
@@ -37,11 +37,10 @@ async def show_last_dictionary(call: CallbackQuery):
             await call.message.answer("Упс, какая-то ошибка!", reply_markup=menu)
 
 
-@dp.callback_query_handler(confirm_callback.filter(item='accept'), state=DeleteDictionary.SetDeleteDictionary)
+@dp.callback_query_handler(confirm_callback.filter(item='accept'), state=DeleteLastDictionary.SetDeleteDictionary)
 async def accept_deletion(call: CallbackQuery, state: FSMContext):
     await call.answer("Удалено", cache_time=5)
     await call.message.delete()
-
     tg_id = call.from_user.id
     ######################################################################
     #                            DATABASE Queries                        #
@@ -52,7 +51,7 @@ async def accept_deletion(call: CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteDictionary.SetDeleteDictionary)
+@dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteLastDictionary.SetDeleteDictionary)
 async def cancel_deletion(call: CallbackQuery, state: FSMContext):
     await call.answer("Отмена", cache_time=5)
     await call.message.delete()
