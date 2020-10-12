@@ -1,6 +1,6 @@
 import asyncpg
 from aiogram.dispatcher.filters import Text
-from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import dp, db
 from utils.misc import rate_limit

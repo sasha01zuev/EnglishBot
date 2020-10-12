@@ -4,14 +4,11 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
-from loader import dp, bot, db
+from loader import dp, db
 from states import Start
 from keyboards.default import menu
 from utils.misc import rate_limit
 import asyncpg
-
-#for admin
-from data.config import MAIN_ADMIN
 
 
 @rate_limit(limit=5)
@@ -20,19 +17,23 @@ async def show_menu(message: Message):
     first_name = message.from_user.first_name
     full_name = message.from_user.full_name
     tg_id = message.from_user.id
-
+    username = message.from_user.username
 
     try:
-        await db.add_user(tg_id, first_name, full_name)
+        ########################################################################
+        #                         DATABASE Query                               #
+        await db.add_user(tg_id, first_name, full_name, username)
+        ########################################################################
+
         await message.answer(f"Привет, {message.from_user.first_name}! Я вижу ты здесь впервые!\n"
                              "Tы можешь прочитать в описании зачем я exist.\n"
                              "Кстати exist - существовать\n")
-        await asyncio.sleep(5)
+        await asyncio.sleep(4)
         await message.answer("Ладно, перейдем к делу ...")
-        await asyncio.sleep(3)
+        await asyncio.sleep(2)
         await message.answer("Для начала тебе нужно добавить свой первый словарь.\n"
                              "Давай я тебе помогу!")
-        await asyncio.sleep(4.5)
+        await asyncio.sleep(3)
         await message.answer("Напиши название своего словаря.\n"
                              "По умолчанию - Dictionary 1")
 
@@ -87,10 +88,4 @@ async def set_russian_word(message: Message, state: FSMContext):
 
     await state.finish()
 
-    if str(message.from_user.id) != str(MAIN_ADMIN):
-        await bot.send_message(MAIN_ADMIN, text=f"{message.from_user.first_name} "
-                                                f"{message.from_user.last_name} "
-                                                f"{message.from_user.id}:\n"
-                                                f"Название словаря - {dict_name}\n"
-                                                f"Перевод: {english_word} - {russian_word}")
 

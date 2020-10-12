@@ -51,7 +51,7 @@ async def delete_last_word(call: CallbackQuery):
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteLastTranslate.SetDeleteLastTranslate)
 async def accept_deletion(call: CallbackQuery, state: FSMContext):
-    await call.answer("Удалено", cache_time=5)
+    await call.answer("Удалено!", cache_time=5)
     await call.message.delete()
 
     tg_id = call.from_user.id

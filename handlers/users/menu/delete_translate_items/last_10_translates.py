@@ -43,7 +43,7 @@ async def delete_last_10_translates(call: CallbackQuery):
 
 @dp.callback_query_handler(cancel_button_callback.filter(state='True'), state=DeleteTranslate.SetDeleteTranslate)
 async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
-    await call.answer(cache_time=5)
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
 
@@ -67,8 +67,8 @@ async def confirm_deletion(call: CallbackQuery, callback_data: dict, state: FSMC
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteTranslate.SetDeleteTranslate)
 async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await call.answer("Удалено!", cache_time=5)
     await call.message.delete()
-    await call.answer(cache_time=5)
 
     await state.update_data()
     data = await state.get_data()
@@ -82,7 +82,6 @@ async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMCo
     #                                                                                   #
     #####################################################################################
 
-    await call.message.answer("Удалено!")
     await state.finish()
 
 

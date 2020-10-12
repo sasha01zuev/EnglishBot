@@ -20,8 +20,9 @@ async def set_dictionary_name(message: Message, state: FSMContext):
     data = await state.get_data()
     dictionary_name = data.get("dictionary_name")
     tg_id = message.from_user.id
+
     ########################################################################
-    #                        DATABASE Queries                              #
+    #                           DATABASE Query                             #
     await db.add_dictionary(tg_id, dictionary_name)
     #                                                                      #
     ########################################################################

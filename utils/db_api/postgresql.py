@@ -28,12 +28,12 @@ class Database:
         ])
         return sql, tuple(parameters.values())
 
-    async def add_user(self, tg_id: int, name: str, full_name: str,):
+    async def add_user(self, tg_id: int, name: str, full_name: str, username: str):
         sql = """
-           INSERT INTO users(tg_id, name, full_name, registration_date, last_action) 
-           VALUES($1, $2, $3, NOW(), NOW());
+           INSERT INTO users(tg_id, name, full_name, username) 
+           VALUES($1, $2, $3, $4);
            """
-        await self.pool.execute(sql, tg_id, name, full_name)
+        await self.pool.execute(sql, tg_id, name, full_name, username)
 
     async def add_dictionary(self, user_id: int, name: str):
         sql = """

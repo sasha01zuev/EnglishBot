@@ -1,7 +1,7 @@
-from aiogram.types import CallbackQuery, ReplyKeyboardRemove, Message
+from aiogram.types import CallbackQuery, Message
 from aiogram.dispatcher import FSMContext
 
-from keyboards.inline.delete_translate_buttons import delete_translate_callback, menu_delete_translate_keyboard
+from keyboards.inline.delete_translate_buttons import delete_translate_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard, confirm_callback
 from loader import dp, db
 from states import DeleteInputtedTranslate
@@ -43,9 +43,9 @@ async def confirm_deletion(message: Message, state: FSMContext):
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteInputtedTranslate.InputWord)
-async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def accept_deletion(call: CallbackQuery, state: FSMContext):
+    await call.answer("Удалено!", cache_time=5)
     await call.message.delete()
-    await call.answer(cache_time=5)
     data = await state.get_data()
     word_name = data.get("word_name")
     tg_id = call.from_user.id

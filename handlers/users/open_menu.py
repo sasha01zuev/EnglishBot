@@ -1,4 +1,4 @@
-from aiogram.dispatcher.filters import Command, Text
+from aiogram.dispatcher.filters import Command
 from aiogram.types import Message
 
 from keyboards.default import menu
