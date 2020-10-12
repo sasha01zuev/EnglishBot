@@ -3,9 +3,10 @@ from loader import bot
 
 async def on_startup(dp):
     from utils.notify_admins import on_startup_notify
-    import middlewares
 
+    import middlewares
     middlewares.setup(dp)
+
     await on_startup_notify(dp)
 
 

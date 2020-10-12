@@ -125,3 +125,24 @@ class Database:
         SELECT * FROM  dictionaries WHERE id = $1;
         """
         return await self.pool.fetchrow(sql, dictionary_id)
+
+    async def add_message(self, user_id, message):
+        sql = """
+        INSERT INTO messages(user_id, message, date_time)
+        VALUES ($1, $2, NOW());
+        """
+        await self.pool.execute(sql, user_id, message)
+
+    async def add_last_action(self, user_id):
+
+        sql = """
+        UPDATE user_parameters SET last_action = NOW() WHERE user_id = $1;
+        """
+        await self.pool.execute(sql, user_id)
+
+    async def set_user_parameters(self, user_id, reverse_translate):
+        sql = """
+        INSERT INTO user_parameters(user_id, registration_date, last_action, reverse_translate)
+        VALUES ($1,NOW(),NOW(),$2);
+        """
+        await self.pool.execute(sql, user_id, reverse_translate)

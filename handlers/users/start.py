@@ -76,10 +76,9 @@ async def set_russian_word(message: Message, state: FSMContext):
     await db.set_current_dictionary(tg_id, dictionary_for_start)
     current_dictionary = await db.select_current_dictionary(tg_id)
     await db.add_translate(current_dictionary, english_word, russian_word)
-    #                                                                      #
+    await db.set_user_parameters(tg_id, False)
     ########################################################################
 
-    await asyncio.sleep(2)
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"
                          f"Перевод:\n{english_word} - {russian_word}")
 
@@ -95,3 +94,4 @@ async def set_russian_word(message: Message, state: FSMContext):
                                                 f"{message.from_user.id}:\n"
                                                 f"Название словаря - {dict_name}\n"
                                                 f"Перевод: {english_word} - {russian_word}")
+
