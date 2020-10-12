@@ -61,11 +61,11 @@ class Database:
 
     async def select_last_10_translates(self, dictionary_id):
         sql = """
-        SELECT * FROM words WHERE dictionary_id = $1 LIMIT 10;
+        SELECT * FROM words WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 10;
         """
         return await self.pool.fetch(sql, dictionary_id)
 
-    async def select_dictionary_for_start(self, user_id):
+    async def select_dictionary_id_for_start(self, user_id):
         sql = """
         SELECT id FROM dictionaries WHERE user_id = $1;
         """
