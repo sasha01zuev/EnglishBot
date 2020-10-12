@@ -2,7 +2,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, ReplyKeyboardRemove
 
 from aiogram.dispatcher import FSMContext
-from states.create_new_dicitonary import CreateNewDict
+from states import CreateNewDict
 
 from keyboards.default import menu
 from loader import dp, db

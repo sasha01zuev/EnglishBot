@@ -3,7 +3,6 @@ from aiogram.types import Message
 
 from keyboards.inline.delete_translate_buttons import menu_delete_translate_keyboard
 from loader import dp
-from states.delete_translate import DeleteTranslate
 
 
 @dp.message_handler(Text("Удалить перевод"))

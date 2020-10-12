@@ -5,10 +5,9 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
 from loader import dp, bot, db
-from states.start_for_new_user import Start
+from states import Start
 from keyboards.default import menu
 from utils.misc import rate_limit
-from datetime import datetime
 import asyncpg
 
 #for admin
@@ -21,10 +20,10 @@ async def show_menu(message: Message):
     first_name = message.from_user.first_name
     full_name = message.from_user.full_name
     tg_id = message.from_user.id
-    current_time = datetime.now()
+
 
     try:
-        await db.add_user(tg_id, first_name, full_name, current_time, current_time)
+        await db.add_user(tg_id, first_name, full_name)
         await message.answer(f"Привет, {message.from_user.first_name}! Я вижу ты здесь впервые!\n"
                              "Tы можешь прочитать в описании зачем я exist.\n"
                              "Кстати exist - существовать\n")

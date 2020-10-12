@@ -5,7 +5,7 @@ import asyncpg
 from aiogram.dispatcher import FSMContext
 
 from keyboards.inline.callback_data import select_dictionary_callback
-from states.create_new_translate import CreateNewTranslate
+from states import CreateNewTranslate
 
 from keyboards.default import menu
 from loader import dp, db
@@ -28,7 +28,6 @@ async def set_english_word(message: Message, state: FSMContext):
 async def set_russian_word(message: Message, state: FSMContext):
     await state.update_data(russian_word=message.text)
     data = await state.get_data()
-    dict_name = data.get("dict_name")
     english_word = data.get("english_word")
     russian_word = data.get("russian_word")
     tg_id = message.from_user.id

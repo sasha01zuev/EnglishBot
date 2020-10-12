@@ -5,7 +5,7 @@ from keyboards.inline.buttons.cancel_button import cancel_button
 from keyboards.inline.callback_data import delete_dictionary_callback, confirm_callback, select_dictionary_callback, \
     cancel_button_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard
-from states.delete_dictionary import DeleteDictionary
+from states import DeleteDictionary
 from loader import dp, db
 
 

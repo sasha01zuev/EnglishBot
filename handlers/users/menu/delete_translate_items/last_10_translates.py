@@ -5,7 +5,7 @@ from keyboards.inline.delete_translate_buttons import delete_translate_callback
 from loader import dp, db
 from keyboards.inline.confirm_buttons import confirm_keyboard
 from keyboards.inline.callback_data import select_translate_callback, confirm_callback
-from states.delete_translate import DeleteTranslate
+from states import DeleteTranslate
 from keyboards.inline.buttons.cancel_button import cancel_button
 from keyboards.inline.callback_data import cancel_button_callback
 

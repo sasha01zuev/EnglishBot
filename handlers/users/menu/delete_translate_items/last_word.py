@@ -6,7 +6,7 @@ from keyboards.inline.callback_data import confirm_callback, delete_translate_ca
 from keyboards.inline.confirm_buttons import confirm_keyboard
 
 from loader import dp, db
-from states.delete_last_translate import DeleteLastTranslate
+from states import DeleteLastTranslate
 
 
 @dp.callback_query_handler(delete_translate_callback.filter(item="last_added_word"))

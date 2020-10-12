@@ -1,17 +1,16 @@
-import aiogram
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import CallbackQuery
 
 from keyboards.default import menu
 from keyboards.inline.callback_data import delete_dictionary_callback, confirm_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard
 
 from loader import dp, db
-from states.delete_dictionary import DeleteDictionary
+from states import DeleteDictionary
 
 
 @dp.callback_query_handler(delete_dictionary_callback.filter(item="last_added_dictionary"))
-async def show_last_dictionary(call: CallbackQuery, callback_data: dict):
+async def show_last_dictionary(call: CallbackQuery):
     await call.answer(cache_time=5)
     tg_id = call.from_user.id
     await call.message.delete()

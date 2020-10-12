@@ -3,7 +3,6 @@ from data.config import MAIN_ADMIN
 from loader import dp, bot
 
 
-
 @dp.message_handler()
 async def echo_n_send_to_admin(message: types.Message):
     await message.answer(message.text)
