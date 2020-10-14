@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from environs import Env
 
 env = Env()
@@ -11,3 +13,7 @@ PGUSER = env("PGUSER")
 PGPASSWORD = env("PGPASSWORD")
 
 IP = env("IP")
+
+I18N_DOMAIN = 'testbot'
+BASE_DIR = Path(__file__).parent
+LOCALES_DIR = BASE_DIR / 'locales'

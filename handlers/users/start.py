@@ -68,6 +68,7 @@ async def set_russian_word(message: Message, state: FSMContext):
     english_word = data.get("english_word")
     russian_word = data.get("russian_word")
     tg_id = message.from_user.id
+    user_language = message.from_user.language_code
 
     ########################################################################
     #                        DATABASE Queries                              #
@@ -76,7 +77,7 @@ async def set_russian_word(message: Message, state: FSMContext):
     await db.set_current_dictionary(tg_id, dictionary_id_for_start)
     current_dictionary = await db.select_current_dictionary(tg_id)
     await db.add_translate(current_dictionary, english_word, russian_word)
-    await db.set_user_parameters(tg_id, False)
+    await db.set_user_parameters(tg_id, False, user_language)
     ########################################################################
 
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"

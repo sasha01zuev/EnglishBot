@@ -7,15 +7,13 @@ bot_settings = InlineKeyboardMarkup(row_width=1,
                                         [
                                             InlineKeyboardButton(text="Обратить перевод 🔁",
                                                                  callback_data=settings_callback.new(
-                                                                     settings_item="reverse_translate",
-                                                                     setting_choose=False))
+                                                                     settings_item="reverse_translate"))
                                         ],
 
                                         [
                                             InlineKeyboardButton(text="Поменять язык - 🇺🇸",
                                                                  callback_data=settings_callback.new(
-                                                                  settings_item="change_language",
-                                                                     setting_choose="ru"))
+                                                                  settings_item="change_language"))
                                         ]
 
                                     ]

@@ -134,15 +134,20 @@ class Database:
         await self.pool.execute(sql, user_id, message)
 
     async def add_last_action(self, user_id):
-
         sql = """
         UPDATE user_parameters SET last_action = NOW() WHERE user_id = $1;
         """
         await self.pool.execute(sql, user_id)
 
-    async def set_user_parameters(self, user_id, reverse_translate):
+    async def set_user_parameters(self, user_id, reverse_translate, user_language):
         sql = """
-        INSERT INTO user_parameters(user_id, registration_date, last_action, reverse_translate)
-        VALUES ($1,NOW(),NOW(),$2);
+        INSERT INTO user_parameters(user_id, registration_date, last_action, reverse_translate, user_language)
+        VALUES ($1,NOW(),NOW(),$2, $3);
         """
-        await self.pool.execute(sql, user_id, reverse_translate)
+        await self.pool.execute(sql, user_id, reverse_translate, user_language)
+
+    async def get_user_language(self, user_id):
+        sql = """
+        SELECT user_language FROM user_parameters WHERE  user_id = $1;
+        """
+        return await self.pool.fetchval(sql, user_id)

@@ -7,3 +7,4 @@ from .states import DeleteLastDictionary
 from .states import DeleteListDictionary
 from .states import DeleteTranslate
 from .states import ChangeDictionary
+from .states import SelectLanguage

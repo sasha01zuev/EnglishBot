@@ -38,3 +38,7 @@ class Start(StatesGroup):
 
 class ChangeDictionary(StatesGroup):
     SetChangeDictionary = State()
+
+
+class SelectLanguage(StatesGroup):
+    SetLanguage = State()

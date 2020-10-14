@@ -2,6 +2,7 @@ from aiogram import Dispatcher
 
 from .throttling import ThrottlingMiddleware
 from .database import SetDBMessage
+# from .language_middleware import ACLMiddleware
 
 
 def setup(dp: Dispatcher):

@@ -3,6 +3,6 @@ from loader import dp
 
 
 @dp.message_handler()
-async def echo_n_send_to_admin(message: types.Message):
-    await message.answer(message.text)
+async def echo(message: types.Message):
+    await message.answer("Вы ввели {message}".format(message=message.text))
 
