@@ -1,8 +1,8 @@
-Название - testbot, можете сменить на любое другое
+Название - EnglishBot, можете сменить на любое другое
 
 Запускаем первый раз
 1. Вытаскиваем тексты из файлов (он сам находит)
-pybabel extract . -o locales/testbot.pot
+pybabel extract . -o locales/EnglishBot.pot
 2. Создаем папку для перевода на английский
 pybabel init -i locales/testbot.pot -d locales -D testbot -l en
 3. То же, на русский

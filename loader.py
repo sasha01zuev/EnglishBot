@@ -17,8 +17,8 @@ db = loop.run_until_complete(Database.create())
 logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s',
                     level=logging.INFO,
                     )
-#
+
 # # Настроим i18n middleware для работы с многоязычностью
-# i18n = setup_middleware(dp)
+# i18n = setup(dp)
 # # Создадим псевдоним для метода gettext
 # _ = i18n.gettext
