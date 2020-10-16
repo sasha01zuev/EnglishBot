@@ -90,4 +90,3 @@ async def set_russian_word(message: Message, state: FSMContext):
 
     await state.finish()
 
-

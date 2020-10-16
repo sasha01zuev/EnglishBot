@@ -10,6 +10,8 @@ def setup(dp: Dispatcher):
     dp.middleware.setup(ThrottlingMiddleware())
     dp.middleware.setup(SetDBMessage())
 
+
+def setup_languages(dp: Dispatcher):
     i18n = ACLMiddleware(I18N_DOMAIN, LOCALES_DIR)
     dp.middleware.setup(i18n)
     return i18n
