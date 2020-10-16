@@ -4,10 +4,11 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
-from loader import dp, db
+from loader import dp, db, _
 from states import Start
 from keyboards.default import menu
 from utils.misc import rate_limit
+
 import asyncpg
 
 
@@ -46,7 +47,7 @@ async def show_menu(message: Message):
 @dp.message_handler(state=Start.SetDictionary)
 async def set_dict_name(message: Message, state: FSMContext):
     await state.update_data(dict_name=message.text)
-    await message.answer("Отлично! Теперь давай добавим первый перевод.")
+    await message.answer(_("Отлично! Теперь давай добавим первый перевод."))
     await asyncio.sleep(2)
     await message.answer("Сперва введи слово на английском")
     await Start.SetEnglishWord.set()
