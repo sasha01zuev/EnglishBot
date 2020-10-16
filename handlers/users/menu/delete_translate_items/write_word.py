@@ -52,19 +52,19 @@ async def accept_deletion(call: CallbackQuery, state: FSMContext):
     word_name = data.get("word_name")
     tg_id = call.from_user.id
 
-    ########################################################################
-    #                        DATABASE Queries                              #
-    current_dictionary = await db.select_current_dictionary(tg_id)
-    selected_translate = await db.select_translate(current_dictionary,
-                                                   word=word_name)
-    await db.delete_translate(current_dictionary, word=word_name)
-    #                                                                      #
-    ########################################################################
+    try:
 
-    english_word = selected_translate[0][1]
-    russian_word = selected_translate[0][2]
+        ########################################################################
+        #                        DATABASE Queries                              #
+        current_dictionary = await db.select_current_dictionary(tg_id)
+        selected_translate = await db.select_translate(current_dictionary,
+                                                       word=word_name)
+        await db.delete_translate(current_dictionary, word=word_name)
+        #                                                                      #
+        ########################################################################
+    except Exception as exc:
+        await call.answer(_("Произошла ошибка\n{exc}").format(exc=exc), show_alert=True)
 
-    await call.message.answer(_('Принято. Удаление "{english_word} - {russian_word}"...'))
     await state.finish()
 
 
