@@ -7,19 +7,19 @@ from keyboards.inline.callback_data import select_dictionary_callback
 from states import CreateNewTranslate
 
 from keyboards.default import menu
-from loader import dp, db
+from loader import dp, db, _
 
 
 @dp.message_handler(Text("Новый перевод"))
 async def new_translate(message: Message):
-    await message.answer("Напиши слово на английском", reply_markup=ReplyKeyboardRemove())
+    await message.answer(_("Напиши слово на английском"), reply_markup=ReplyKeyboardRemove())
     await CreateNewTranslate.SetEnglishWord.set()
 
 
 @dp.message_handler(state=CreateNewTranslate.SetEnglishWord)
 async def set_english_word(message: Message, state: FSMContext):
     await state.update_data(english_word=message.text)
-    await message.answer("Теперь введи перевод своего слова")
+    await message.answer(_("Теперь введи перевод своего слова"))
     await CreateNewTranslate.SetRussianWord.set()
 
 
@@ -38,8 +38,10 @@ async def set_russian_word(message: Message, state: FSMContext):
         await db.add_translate(current_dictionary, english_word, russian_word)
         #                                                                      #
         ########################################################################
-        await message.answer(f"Добавлен новый перевод:\n"
-                             f"{english_word} - {russian_word}", reply_markup=menu)
+        await message.answer(_("Добавлен новый перевод:\n"
+                             "{english_word} - {russian_word}").format(
+            english_word=english_word, russian_word=russian_word
+        ), reply_markup=menu)
         await state.finish()
 
     except asyncpg.exceptions.NotNullViolationError:
@@ -53,14 +55,14 @@ async def set_russian_word(message: Message, state: FSMContext):
                             dictionary_id=item[0],
                             dictionary_name=item[2]))] for item in select_dictionaries]
             )
-            await message.answer("Так как вы удалили свой текущий словарь, \n"
-                                 "то вам прийдется выбрать новый текущий словарь",
+            await message.answer(_("Так как вы удалили свой текущий словарь, \n"
+                                 "то вам прийдется выбрать новый текущий словарь"),
                                  reply_markup=show_dictionaries_keyboard)
         else:
-            await message.answer("У вас нету словарей! Добавьте хоть один словарь.", reply_markup=menu)
+            await message.answer(_("У вас нету словарей! Добавьте хоть один словарь."), reply_markup=menu)
             await state.finish()
     except:
-        await message.answer(f"Упс, какая-то ошибка!", reply_markup=menu)
+        await message.answer(_("Упс, какая-то ошибка!"), reply_markup=menu)
         await state.finish()
 
 
@@ -74,9 +76,11 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
     #                        DATABASE Queries                              #
     await db.set_current_dictionary(tg_id, id_selected_dictionary)
     ########################################################################
-    await call.answer(f"Выбран словарь '{name_selected_dictionary}'", cache_time=5)
+    await call.answer(_("Выбран словарь '{dict}'").format(
+        dict=name_selected_dictionary
+    ), cache_time=5)
     await call.message.delete()
 
-    await call.message.answer(f"Теперь вы можете создать перевод!", reply_markup=menu)
+    await call.message.answer(_("Теперь вы можете создать перевод!"), reply_markup=menu)
 
     await state.finish()

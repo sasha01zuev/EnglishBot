@@ -1,7 +1,7 @@
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery, InlineKeyboardButton
 
-from loader import dp, bot
+from loader import dp, bot, _
 from utils.misc import rate_limit
 from keyboards.inline.bot_settings_buttons import bot_settings
 from keyboards.inline.callback_data import settings_callback

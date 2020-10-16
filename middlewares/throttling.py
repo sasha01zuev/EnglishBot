@@ -5,6 +5,7 @@ from aiogram.dispatcher import DEFAULT_RATE_LIMIT
 from aiogram.dispatcher.handler import CancelHandler, current_handler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.utils.exceptions import Throttled
+from loader import _
 
 
 class ThrottlingMiddleware(BaseMiddleware):
@@ -36,7 +37,7 @@ class ThrottlingMiddleware(BaseMiddleware):
     async def message_throttled(self, message: types.Message, throttled: Throttled):
         delta = throttled.rate - throttled.delta
         if throttled.exceeded_count == 2:
-            await message.reply('Слишком Часто! Давай не так быстро')
+            await message.reply(_('Слишком Часто! Давай не так быстро'))
         elif throttled.exceeded_count == 3:
-            await message.reply("Всё. Больше не отвечу, пока не пройдет 5 сек")
+            await message.reply(_("Всё. Больше не отвечу, пока не пройдет 5 сек"))
         await asyncio.sleep(delta)
