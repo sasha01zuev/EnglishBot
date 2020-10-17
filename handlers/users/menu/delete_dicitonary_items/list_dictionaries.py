@@ -20,7 +20,7 @@ async def show_list_of_dictionaries(call: CallbackQuery):
     show_dictionaries_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(
-                text=_("{dict} - текущий словарь").format(
+                text=_("{dict} - текущий словарь 📌").format(
                     dict=item[2]
                 ),
                 callback_data=select_dictionary_callback.new(
@@ -53,9 +53,9 @@ async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: F
         dictionary = await db.select_dictionary(dictionary_id)
         #####################################################################################
 
-        await call.message.answer(_('Удалить словарь '
+        await call.message.answer(_('Вы действительно хотите удалить словарь '
                                     '"<b>{dict}</b>" ?\n'
-                                    'Все слова записанные в этот словарь также удалаяются!').format(
+                                    'Все слова записанные в этот словарь также <i>удалаяются</i>!').format(
             dict=dictionary[2]
         ),
             reply_markup=confirm_keyboard)

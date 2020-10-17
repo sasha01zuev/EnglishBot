@@ -37,7 +37,7 @@ async def delete_last_10_translates(call: CallbackQuery):
     )
     show_last_10th_translates_keyboard.row(cancel_button)
 
-    await call.message.answer(_('Последние 10 слов:'), reply_markup=show_last_10th_translates_keyboard)
+    await call.message.answer(_('Последние 10 переводов:'), reply_markup=show_last_10th_translates_keyboard)
     await DeleteTranslate.SetDeleteTranslate.set()
 
 
@@ -62,7 +62,7 @@ async def confirm_deletion(call: CallbackQuery, callback_data: dict, state: FSMC
     await state.update_data(current_dictionary_id=id_selected_dictionary)
 
     await call.message.answer(_("Вы действительно хотите удалить это перевод?\n"
-                              "{english_word} - {russian_word}").format(
+                              "<b>{english_word}</b> - <b>{russian_word}</b>").format(
         english_word=english_word, russian_word=russian_word
     ), reply_markup=confirm_keyboard)
 

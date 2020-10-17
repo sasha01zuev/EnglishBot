@@ -8,7 +8,7 @@ from keyboards.default import menu
 from loader import dp, db, _
 
 
-@dp.message_handler(Text("Новый словарь"))
+@dp.message_handler(Text("📓Новый словарь"))
 async def new_dictionary(message: Message):
     dictionaries = await db.select_dictionaries(message.from_user.id)
     if len(dictionaries) == 10:

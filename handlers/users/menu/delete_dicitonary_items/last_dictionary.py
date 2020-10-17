@@ -12,17 +12,19 @@ from states import DeleteLastDictionary
 @dp.callback_query_handler(delete_dictionary_callback.filter(item="last_added_dictionary"))
 async def show_last_dictionary(call: CallbackQuery):
     await call.answer(cache_time=5)
-    tg_id = call.from_user.id
     await call.message.delete()
+    tg_id = call.from_user.id
+
     try:
+
         ######################################################################
         #                            DATABASE Queries                        #
         last_dictionary = await db.select_last_dictionary(tg_id)
         ######################################################################
 
         await call.message.answer(_('Вы действительно хотите удалить словарь '
-                                    '"{dict}?"\n'
-                                    'Все слова записанные в этот словарь также удалаяются!').format(
+                                    '"<b>{dict}</b>?"\n'
+                                    'Все слова записанные в этот словарь также <i>удалаяются</i>!').format(
             dict=last_dictionary[2]
         ),
             reply_markup=confirm_keyboard)
@@ -30,7 +32,6 @@ async def show_last_dictionary(call: CallbackQuery):
         await DeleteLastDictionary.SetDeleteDictionary.set()
 
     except TypeError:
-
         select_dictionaries = await db.select_dictionaries(tg_id)
         if not len(select_dictionaries) > 0:
             await call.message.answer(_("У вас нету словарей! Добавьте хоть один словарь."),

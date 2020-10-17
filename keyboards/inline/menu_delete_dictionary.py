@@ -15,7 +15,7 @@ delete_translate_keyboard = InlineKeyboardMarkup(
                                      item="list"))
         ],
         [
-            InlineKeyboardButton(text=_("Отменить"),
+            InlineKeyboardButton(text=_("Отменить 🚫"),
                                  callback_data=delete_dictionary_callback.new(
                                      item="cancel"))
         ]

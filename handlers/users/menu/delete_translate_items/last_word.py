@@ -24,7 +24,7 @@ async def delete_last_word(call: CallbackQuery):
         russian_word = last_translate[2]
 
         await call.message.answer(_("Вы действительно хотите удалить это перевод?\n"
-                                  "{english_word} - {russian_word}").format(
+                                  "<b>{english_word}</b> - <b>{russian_word}</b>").format(
             english_word=english_word, russian_word=russian_word
         ), reply_markup=confirm_keyboard)
 
@@ -42,7 +42,7 @@ async def delete_last_word(call: CallbackQuery):
                             dictionary_name=item[2]))] for item in select_dictionaries]
             )
             await call.message.answer(_("Так как вы удалили свой текущий словарь, \n"
-                                      "то вам прийдется выбрать новый текущий словарь"),
+                                      "то вам придется выбрать <i>новый текущий словарь</i>"),
                                       reply_markup=show_dictionaries_keyboard)
             await DeleteLastTranslate.SetDeleteLastTranslate.set()
             await call.message.delete()
@@ -94,6 +94,7 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
         dict=name_selected_dictionary
     ), cache_time=5)
     await call.message.delete()
-    await call.message.answer(_("Теперь, чтобы удалить перевод, вы должны его для начала добавить!"), reply_markup=menu)
+    await call.message.answer(_("Теперь, чтобы удалить перевод, вы должны его c начала <i>добавить</i>!"),
+                              reply_markup=menu)
 
     await state.finish()

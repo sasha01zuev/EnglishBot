@@ -10,7 +10,7 @@ from keyboards.default import menu
 from loader import dp, db, _
 
 
-@dp.message_handler(Text("Новый перевод"))
+@dp.message_handler(Text("📌Новый перевод"))
 async def new_translate(message: Message):
     await message.answer(_("Напиши слово на английском"), reply_markup=ReplyKeyboardRemove())
     await CreateNewTranslate.SetEnglishWord.set()

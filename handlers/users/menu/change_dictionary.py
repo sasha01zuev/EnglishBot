@@ -22,7 +22,7 @@ async def change_dictionary(message: Message):
 
     show_dictionaries_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(
-            text=_("{dict} - текущий словарь").format(
+            text=_("{dict} - текущий словарь 📌").format(
                 dict=item[2]
             ),
             callback_data=select_dictionary_callback.new(
@@ -67,12 +67,10 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
         await call.message.delete()
         await state.finish()
     except asyncpg.exceptions.ForeignKeyViolationError:
-        await call.answer(cache_time=5)
+        await call.answer(_("Этого словаря уже не существует!"), show_alert=True, cache_time=5)
         await call.message.delete()
-        await call.message.answer(_("Этого словаря уже не существует!"))
         await state.finish()
     except:
-        await call.answer(cache_time=5)
+        await call.answer(_("Упс, какая-то ошибка!"), show_alert=True, cache_time=5)
         await call.message.delete()
-        await call.message.answer(_("Упс, какая-то ошибка!"))
         await state.finish()

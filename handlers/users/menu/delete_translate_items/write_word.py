@@ -11,7 +11,7 @@ from states import DeleteInputtedTranslate
 async def write_word(call: CallbackQuery, callback_data: dict):
     await call.message.delete()
     await call.answer(cache_time=5)
-    await call.message.answer(_("Введи своё слово"))
+    await call.message.answer(_("Введи слово из перевода"))
     await DeleteInputtedTranslate.InputWord.set()
 
 
@@ -31,12 +31,13 @@ async def confirm_deletion(message: Message, state: FSMContext):
     try:
         english_word = selected_translate[0][1]
         russian_word = selected_translate[0][2]
-        await message.answer(_('Вы действительно хотите удалить "{english_word} - {russian_word}"?').format(
+        await message.answer(_('Вы действительно хотите удалить '
+                               '"<b>{english_word}</b> - <b>{russian_word}</b>"?').format(
             english_word=english_word, russian_word=russian_word
         ),
                              reply_markup=confirm_keyboard)
     except IndexError:
-        await message.answer(_("В этом словаре перевод не найден!"))
+        await message.answer(_("В этом словаре перевод <i>не найден</i>!"))
         await state.finish()
 
     except Exception as exc:

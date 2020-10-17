@@ -7,6 +7,6 @@ from utils.misc import rate_limit
 
 
 @rate_limit(limit=5)
-@dp.message_handler(Text("Удалить словарь"))
+@dp.message_handler(Text("🗑Удалить словарь"))
 async def delete_dictionary(message: Message):
-    await message.answer(_("Выберите пункт"), reply_markup=delete_translate_keyboard)
+    await message.answer(_("Как удаляем? 🙃"), reply_markup=delete_translate_keyboard)

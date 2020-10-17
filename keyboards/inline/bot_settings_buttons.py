@@ -12,7 +12,7 @@ bot_settings = InlineKeyboardMarkup(row_width=1,
                                         ],
 
                                         [
-                                            InlineKeyboardButton(text=_("Поменять язык - 🇺🇸"),
+                                            InlineKeyboardButton(text=_("Поменять язык 🌐"),
                                                                  callback_data=settings_callback.new(
                                                                   settings_item="change_language"))
                                         ]

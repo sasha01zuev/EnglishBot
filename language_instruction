@@ -4,18 +4,18 @@
 1. Вытаскиваем тексты из файлов (он сам находит)
 pybabel extract . -o locales/EnglishBot.pot
 2. Создаем папку для перевода на английский
-pybabel init -i locales/testbot.pot -d locales -D testbot -l en
+pybabel init -i locales/EnglishBot.pot -d locales -D EnglishBot -l en
 3. То же, на русский
-pybabel init -i locales/testbot.pot -d locales -D testbot -l ru
+pybabel init -i locales/EnglishBot.pot -d locales -D EnglishBot -l ru
 4. То же, на украинский
-pybabel init -i locales/testbot.pot -d locales -D testbot -l uk
+pybabel init -i locales/EnglishBot.pot -d locales -D EnglishBot -l uk
 5. Переводим, а потом собираем переводы
-pybabel compile -d locales -D testbot
+pybabel compile -d locales -D EnglishBot
 
 
 Обновляем переводы
 1. Вытаскиваем тексты из файлов, Добавляем текст в переведенные версии
-pybabel extract . -o locales/testbot.pot
-pybabel update -d locales -D testbot -i locales/testbot.pot
+pybabel extract . -o locales/EnglishBot.pot
+pybabel update -d locales -D testbot -i locales/EnglishBot.pot
 3. Вручную делаем переводы, а потом Собираем
-pybabel compile -d locales -D testbot
+pybabel compile -d locales -D EnglishBot

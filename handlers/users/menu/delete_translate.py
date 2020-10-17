@@ -5,7 +5,7 @@ from keyboards.inline.delete_translate_buttons import menu_delete_translate_keyb
 from loader import dp, _
 
 
-@dp.message_handler(Text("Удалить перевод"))
+@dp.message_handler(Text("🗑Удалить перевод"))
 async def delete_translate(message: Message):
     await message.answer(_("Удаление слов"), reply_markup=menu_delete_translate_keyboard)
 
