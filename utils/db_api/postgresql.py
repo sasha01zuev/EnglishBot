@@ -61,7 +61,7 @@ class Database:
 
     async def select_last_10_translates(self, dictionary_id):
         sql = """
-        SELECT * FROM words WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 10;
+        SELECT * FROM translates WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 10;
         """
         return await self.pool.fetch(sql, dictionary_id)
 
@@ -77,34 +77,34 @@ class Database:
         """
         return await self.pool.fetchval(sql, user_id)
 
-    async def add_translate(self, dictionary_id, english, russian):
+    async def add_translate(self, english_word, russian_word, dictionary_id):
         sql = """
-        INSERT INTO words(dictionary_id, english, russian) VALUES ($1, $2, $3);
+        INSERT INTO translates(english_word, russian_word, dictionary_id) VALUES ($1, $2, $3);
         """
-        await self.pool.execute(sql, dictionary_id, english, russian)
+        await self.pool.execute(sql, english_word, russian_word, dictionary_id)
 
     async def select_translate(self, dictionary_id, word):
         sql = """
-        SELECT * FROM words WHERE ((dictionary_id = $1) 
-        AND (lower(english) = LOWER($2) OR lower(russian) = LOWER($2)));
+        SELECT * FROM translates WHERE ((dictionary_id = $1) 
+        AND (lower(english_word) = LOWER($2) OR lower(russian_word) = LOWER($2)));
         """
         return await self.pool.fetch(sql, dictionary_id, word)
 
     async def select_last_translate(self, dictionary_id):
         sql = """
-        SELECT * FROM words WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 1;
+        SELECT * FROM translates WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 1;
         """
         return await self.pool.fetchrow(sql, dictionary_id)
 
     async def delete_translate(self, dictionary_id, word):
         sql = """
-        DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 OR russian = $2));
+        DELETE  FROM translates WHERE ((dictionary_id = $1) AND (english_word = $2 OR russian_word = $2));
         """
         await self.pool.execute(sql, dictionary_id, word)
 
     async def delete_translate_accurate(self, dictionary_id, english_word, russian_word):
         sql = """
-        DELETE  FROM words WHERE ((dictionary_id = $1) AND (english = $2 AND russian = $3));
+        DELETE  FROM translates WHERE ((dictionary_id = $1) AND (english_word = $2 AND russian_word = $3));
         """
         await self.pool.execute(sql, dictionary_id, english_word, russian_word)
 

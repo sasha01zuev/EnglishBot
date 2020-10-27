@@ -4,6 +4,9 @@ from loader import _
 menu = ReplyKeyboardMarkup(
     keyboard=[
         [
+            KeyboardButton(text=_("🎯Учить"))
+        ],
+        [
             KeyboardButton(text=_("📌Новый перевод")),
             KeyboardButton(text=_("🗑Удалить перевод"))
         ],
