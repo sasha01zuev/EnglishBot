@@ -77,7 +77,12 @@ async def set_russian_word(message: Message, state: FSMContext):
     dictionary_id_for_start = await db.select_dictionary_id_for_start(tg_id)
     await db.set_current_dictionary(tg_id, dictionary_id_for_start)
     current_dictionary = await db.select_current_dictionary(tg_id)
-    await db.add_translate(current_dictionary, english_word, russian_word)
+    await db.add_translate(english_word, russian_word, current_dictionary)
+
+    translate = await db.select_last_translate(current_dictionary)
+    translate_id = translate[0]
+
+    await db.set_learning_translate(current_dictionary, translate_id)
     await db.set_user_parameters(tg_id, False, user_language)
     ########################################################################
 

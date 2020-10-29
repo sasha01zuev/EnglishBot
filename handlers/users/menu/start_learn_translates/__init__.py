@@ -1,0 +1,1 @@
+from .learn_translate import checking_new_translates

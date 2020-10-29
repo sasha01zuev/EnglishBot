@@ -35,7 +35,7 @@ async def set_russian_word(message: Message, state: FSMContext):
         ########################################################################
         #                        DATABASE Queries                              #
         current_dictionary = await db.select_current_dictionary(tg_id)
-        await db.add_translate(current_dictionary, english_word, russian_word)
+        await db.add_translate(english_word, russian_word, current_dictionary)
         #                                                                      #
         ########################################################################
         await message.answer(_("Добавлен новый перевод:\n"
@@ -62,7 +62,7 @@ async def set_russian_word(message: Message, state: FSMContext):
             await message.answer(_("У вас нету словарей! Добавьте хоть один словарь."), reply_markup=menu)
             await state.finish()
     except:
-        await message.answer(_("Упс, какая-то ошибка!"), reply_markup=menu)
+        await message.answer(_("Упс, какая-то ошибка!\n ", reply_markup=menu))
         await state.finish()
 
 

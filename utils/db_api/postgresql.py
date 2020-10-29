@@ -151,3 +151,27 @@ class Database:
         SELECT user_language FROM user_parameters WHERE  user_id = $1;
         """
         return await self.pool.fetchval(sql, user_id)
+
+
+
+    # LEARNING PROCCESS REQUESTS
+
+
+    async def select_learning_translates(self, dictionary_id):
+        sql = """
+        SELECT * FROM learn_translate WHERE dictionary_id = $1;
+        """
+        return await self.pool.fetch(sql, dictionary_id)
+
+    async def set_learning_translate(self, dictionary_id, translate_id):
+        try:
+            sql = """
+            UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
+            """
+            await self.pool.execute(sql, translate_id)
+        except:
+            sql = """
+            INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
+            VALUES ($1, $2, NOW());
+            """
+            await self.pool.execute(sql, dictionary_id, translate_id)

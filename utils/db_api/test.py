@@ -22,8 +22,11 @@ async def test():
     # last_translate = await db.select_last_translate(current_dictionary)
     # print(last_translate)
 
-    last_dictionary = await db.select_last_dictionary(609200395)
-    print(last_dictionary)
+    # last_dictionary = await db.select_last_dictionary(609200395)
+    # print(last_dictionary)
+
+    # learning_translates = await db.select_learning_translates(125)
+    # print(learning_translates)
     print("Success!")
 
 
