@@ -25,8 +25,18 @@ async def test():
     # last_dictionary = await db.select_last_dictionary(609200395)
     # print(last_dictionary)
 
-    # learning_translates = await db.select_learning_translates(125)
-    # print(learning_translates)
+    learning_translates = await db.select_learning_translates(127)
+    print(learning_translates)
+
+    import datetime
+
+    print(learning_translates[0][2].year)
+    print(datetime.date.today())
+    print(learning_translates[0][2] == datetime.date)
+
+
+
+
     print("Success!")
 
 

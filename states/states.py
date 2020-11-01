@@ -42,3 +42,7 @@ class ChangeDictionary(StatesGroup):
 
 class SelectLanguage(StatesGroup):
     SetLanguage = State()
+
+
+class StartLearningTranslates(StatesGroup):
+    SetLeaning = State()
