@@ -79,19 +79,54 @@ async def learning_process(call: CallbackQuery, callback_data: dict, state: FSMC
     await call.message.delete()
     tg_id = call.from_user.id
 
-    ################################################################################
-    #                             DATABASE Queries                                 #
     current_dictionary = await db.select_current_dictionary(tg_id)
-    random_translate = await db.select_random_learning_translate(current_dictionary)
-    ################################################################################
+    learning_translates = await db.select_learning_translates(current_dictionary)
+    learning_translates_quantity = len(learning_translates)
 
-    translate_id = random_translate[0]
-    english_word = random_translate[1]
-    russian_word = random_translate[2]
-    dictionary_id = random_translate[3]
+    if learning_translates_quantity > 1:
+        iteration = True
 
-    await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+        while iteration:
 
-    await ChooseResponse.SetChooseResponse.set()
-    await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
-                            dictionary_id=dictionary_id)
+            ################################################################################
+            #                             DATABASE Queries                                 #
+            current_dictionary = await db.select_current_dictionary(tg_id)
+            random_translate = await db.select_random_learning_translate(current_dictionary)
+            previous_translate = await db.select_last_learning_translate(tg_id)
+            ################################################################################
+
+            if random_translate[0] == previous_translate:
+                pass
+            else:
+                translate_id = random_translate[0]
+                english_word = random_translate[1]
+                russian_word = random_translate[2]
+                dictionary_id = random_translate[3]
+
+                await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+
+                await ChooseResponse.SetChooseResponse.set()
+                await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
+                                        dictionary_id=dictionary_id)
+                await db.set_last_learning_translate(tg_id, translate_id)
+                iteration = False
+
+    else:
+
+        ################################################################################
+        #                             DATABASE Queries                                 #
+        current_dictionary = await db.select_current_dictionary(tg_id)
+        random_translate = await db.select_random_learning_translate(current_dictionary)
+        ################################################################################
+
+        translate_id = random_translate[0]
+        english_word = random_translate[1]
+        russian_word = random_translate[2]
+        dictionary_id = random_translate[3]
+
+        await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+
+        await ChooseResponse.SetChooseResponse.set()
+        await db.set_last_learning_translate(tg_id, translate_id)
+        await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
+                                dictionary_id=dictionary_id)

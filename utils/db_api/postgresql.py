@@ -183,9 +183,16 @@ class Database:
         """
         return await self.pool.fetchrow(sql, dictionary_id)
 
+    async def set_last_learning_translate(self, user_id, translate_id):
+        sql = """
+        UPDATE user_parameters SET last_learning_translate = $2 WHERE user_id = $1;
+        """
+        await self.pool.execute(sql, user_id, translate_id)
+
     async def select_last_learning_translate(self, user_id):
         sql = """
         SELECT last_learning_translate FROM user_parameters
         WHERE user_id = $1;
         """
         return await self.pool.fetchval(sql, user_id)
+
