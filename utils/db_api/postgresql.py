@@ -166,15 +166,16 @@ class Database:
     async def set_learning_translate(self, dictionary_id, translate_id):
         try:
             sql = """
-            UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
-            """
-            await self.pool.execute(sql, dictionary_id, translate_id)
-        except:
-            sql = """
             INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
             VALUES ($1, $2, NOW());
             """
             await self.pool.execute(sql, dictionary_id, translate_id)
+        except:
+            sql = """
+            UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
+            """
+            await self.pool.execute(sql, dictionary_id, translate_id)
+
 
     async def select_random_learning_translate(self, dictionary_id):
         sql = """
