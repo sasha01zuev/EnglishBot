@@ -176,7 +176,6 @@ class Database:
             """
             await self.pool.execute(sql, dictionary_id, translate_id)
 
-
     async def select_random_learning_translate(self, dictionary_id):
         sql = """
         SELECT * FROM translates

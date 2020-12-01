@@ -3,11 +3,19 @@ from aiogram.types import Message, ReplyKeyboardRemove, InlineKeyboardMarkup, In
 import asyncpg
 from aiogram.dispatcher import FSMContext
 
-from keyboards.inline.callback_data import select_dictionary_callback
+from keyboards.inline.callback_data import select_dictionary_callback, add_translate_callback
 from states import CreateNewTranslate
 
 from keyboards.default import menu
 from loader import dp, db, _
+
+
+@dp.callback_query_handler(add_translate_callback.filter(is_selected='True'))
+async def new_translate_callback(call: CallbackQuery):
+    await call.answer()
+    await call.message.delete()
+    await call.message.answer(_("Напиши слово на английском"), reply_markup=ReplyKeyboardRemove())
+    await CreateNewTranslate.SetEnglishWord.set()
 
 
 @dp.message_handler(Text("📌Новый перевод"))
@@ -39,8 +47,6 @@ async def set_russian_word(message: Message, state: FSMContext):
 
         translate = await db.select_last_translate(current_dictionary)
         translate_id = translate[0]
-        print('Current_dict = ',current_dictionary)
-        print('Current_translate_id= ', translate_id)
 
         await db.set_learning_translate(current_dictionary, translate_id)
         #                                                                      #

@@ -11,7 +11,7 @@ from states import StartLearningTranslates, ChooseResponse
 
 
 @dp.message_handler(Text(_("🎯Учить")))
-async def checking_new_translates(message: Message):
+async def checking_new_translates(message: Message, state: FSMContext):
     tg_id = message.from_user.id
 
     current_dictionary = await db.select_current_dictionary(tg_id)
@@ -54,7 +54,23 @@ async def checking_new_translates(message: Message):
                              reply_markup=past_translates_keyboard)
     else:
         # Redirect to main logic for learning translates
-        pass
+        tg_id = message.from_user.id
+
+        ################################################################################
+        #                             DATABASE Queries                                 #
+        current_dictionary = await db.select_current_dictionary(tg_id)
+        random_translate = await db.select_random_learning_translate(current_dictionary)
+        ################################################################################
+
+        translate_id = random_translate[0]
+        english_word = random_translate[1]
+        russian_word = random_translate[2]
+        dictionary_id = random_translate[3]
+
+        await message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+        await ChooseResponse.SetChooseResponse.set()
+        await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
+                                dictionary_id=dictionary_id)
 
 
 @dp.callback_query_handler(start_learning_callback.filter(is_selected='True'))
