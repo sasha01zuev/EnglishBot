@@ -1,3 +1,6 @@
 from .list_translates_is_empty import empty_translates_keyboard
 from .learning_translate_from_past import past_translates_keyboard
 from .shortage_todays_translates import shortage_translates_keyboard
+from .check_learning_response import check_response_keyboard
+from .check_show_translate_response import check_show_translate_keyboard
+from .check_continuation_learning_response import check_continuation_learning_keyboard

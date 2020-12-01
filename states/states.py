@@ -45,4 +45,8 @@ class SelectLanguage(StatesGroup):
 
 
 class StartLearningTranslates(StatesGroup):
-    SetLeaning = State()
+    SetLearning = State()
+
+
+class ChooseResponse(StatesGroup):
+    SetChooseResponse = State()

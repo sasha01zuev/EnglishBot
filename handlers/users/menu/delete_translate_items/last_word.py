@@ -38,7 +38,7 @@ async def delete_last_word(call: CallbackQuery):
                     [InlineKeyboardButton(
                         text=item[2],
                         callback_data=select_dictionary_callback.new(
-                            dictionary_id=item[0],
+                            dictionary_id=item[3],
                             dictionary_name=item[2]))] for item in select_dictionaries]
             )
             await call.message.answer(_("Так как вы удалили свой текущий словарь, \n"

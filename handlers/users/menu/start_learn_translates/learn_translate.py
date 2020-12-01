@@ -1,17 +1,17 @@
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery, InlineKeyboardButton
 from loader import dp, db, _
 from keyboards.inline.learning_translates_keyboards import \
-    shortage_translates_keyboard, empty_translates_keyboard, past_translates_keyboard
+    shortage_translates_keyboard, empty_translates_keyboard, past_translates_keyboard, check_response_keyboard
 import datetime
-from states import StartLearningTranslates
+from keyboards.inline.callback_data import start_learning_callback, show_translate_callback
+from states import StartLearningTranslates, ChooseResponse
 
 
-# @dp.message_handler(Text(_("🎯Учить")))
-@dp.message_handler()
+@dp.message_handler(Text(_("🎯Учить")))
 async def checking_new_translates(message: Message):
-    await message.answer(_("Выбрано учить"))
     tg_id = message.from_user.id
 
     current_dictionary = await db.select_current_dictionary(tg_id)
@@ -53,5 +53,29 @@ async def checking_new_translates(message: Message):
                                "Количество: {quantity}").format(quantity=past_translates),
                              reply_markup=past_translates_keyboard)
     else:
-        # TODO. Redirect to main logic for learning translates
+        # Redirect to main logic for learning translates
         pass
+
+
+@dp.callback_query_handler(start_learning_callback.filter(is_selected='True'))
+async def learning_process(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    await call.answer()
+    await call.message.delete()
+    tg_id = call.from_user.id
+
+    ################################################################################
+    #                             DATABASE Queries                                 #
+    current_dictionary = await db.select_current_dictionary(tg_id)
+    random_translate = await db.select_random_learning_translate(current_dictionary)
+    ################################################################################
+
+    translate_id = random_translate[0]
+    english_word = random_translate[1]
+    russian_word = random_translate[2]
+    dictionary_id = random_translate[3]
+
+    await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+
+    await ChooseResponse.SetChooseResponse.set()
+    await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
+                            dictionary_id=dictionary_id)

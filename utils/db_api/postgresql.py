@@ -168,10 +168,24 @@ class Database:
             sql = """
             UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
             """
-            await self.pool.execute(sql, translate_id)
+            await self.pool.execute(sql, dictionary_id, translate_id)
         except:
             sql = """
             INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
             VALUES ($1, $2, NOW());
             """
             await self.pool.execute(sql, dictionary_id, translate_id)
+
+    async def select_random_learning_translate(self, dictionary_id):
+        sql = """
+        SELECT * FROM translates
+        WHERE id = (SELECT translate_id FROM learn_translate WHERE dictionary_id = $1 ORDER BY random() LIMIT 1);
+        """
+        return await self.pool.fetchrow(sql, dictionary_id)
+
+    async def select_last_learning_translate(self, user_id):
+        sql = """
+        SELECT last_learning_translate FROM user_parameters
+        WHERE user_id = $1;
+        """
+        return await self.pool.fetchval(sql, user_id)

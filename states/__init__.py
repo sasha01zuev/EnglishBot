@@ -9,3 +9,4 @@ from .states import DeleteTranslate
 from .states import ChangeDictionary
 from .states import SelectLanguage
 from .states import StartLearningTranslates
+from .states import ChooseResponse

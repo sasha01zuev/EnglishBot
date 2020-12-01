@@ -27,7 +27,7 @@ async def delete_last_10_translates(call: CallbackQuery):
             [InlineKeyboardButton(
                 text=f'{item[1]} - {item[2]}',
                 callback_data=select_translate_callback.new(
-                    dictionary_id=item[0],
+                    dictionary_id=item[3],
                     english_word=item[1],
                     russian_word=item[2]
                 )
