@@ -1,3 +1,5 @@
+import random
+
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
@@ -44,14 +46,23 @@ async def checking_new_translates(message: Message, state: FSMContext):
 
     if len(learning_translates) == 0:
         await message.answer(_('Нету добавленых переводов!'), reply_markup=empty_translates_keyboard)
+
     elif todays_words_quantity < 4:
-        await message.answer(_("Количетсво переводов: {quantity}. "
-                               "Рекомендуем добавить еще!").format(quantity=todays_words_quantity),
-                             reply_markup=shortage_translates_keyboard)
-    elif todays_words_quantity == 0 and past_translates > 0:
-        await message.answer(_("У вас остались переводы на заучиваение с прошлых дней.\n"
-                               "Количество: {quantity}").format(quantity=past_translates),
-                             reply_markup=past_translates_keyboard)
+        if past_translates > 0:
+            await message.answer(_("У вас остались переводы на заучиваение с прошлых дней.\n"
+                                   "Количество: {past_translates}\n"
+                                   "Количетсво сегодняшних переводов: {todays_translates}.").format(
+                past_translates=past_translates, todays_translates=todays_words_quantity),
+                                 reply_markup=past_translates_keyboard)
+        else:
+            await message.answer(_("Количетсво сегодняшних переводов: {quantity}. "
+                                   "Рекомендуем добавить еще!").format(quantity=todays_words_quantity),
+                                 reply_markup=shortage_translates_keyboard)
+
+    # elif todays_words_quantity == 0 and past_translates > 0:
+    #     await message.answer(_("У вас остались переводы на заучиваение с прошлых дней.\n"
+    #                            "Количество: {quantity}").format(quantity=past_translates),
+    #                          reply_markup=past_translates_keyboard)
     else:
         # Redirect to main logic for learning translates
         tg_id = message.from_user.id
@@ -60,13 +71,17 @@ async def checking_new_translates(message: Message, state: FSMContext):
         #                             DATABASE Queries                                 #
         current_dictionary = await db.select_current_dictionary(tg_id)
         random_translate = await db.select_random_learning_translate(current_dictionary)
+        translates = await db.learning_translates(131)
+        translate_values = [x[0] for x in translates]
+        random_translate_id = random.choice(translate_values)
+        translate = await db.translate_info(random_translate_id)
         ################################################################################
 
-        translate_id = random_translate[0]
-        english_word = random_translate[1]
-        russian_word = random_translate[2]
-        dictionary_id = random_translate[3]
-
+        translate_id = random_translate_id
+        english_word = translate[1]
+        russian_word = translate[2]
+        dictionary_id = translate[3]
+        # Stopped here!!!!
         await message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
         await ChooseResponse.SetChooseResponse.set()
         await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
@@ -91,18 +106,22 @@ async def learning_process(call: CallbackQuery, callback_data: dict, state: FSMC
             ################################################################################
             #                             DATABASE Queries                                 #
             current_dictionary = await db.select_current_dictionary(tg_id)
-            random_translate = await db.select_random_learning_translate(current_dictionary)
+            translates = await db.learning_translates(131)
+            translate_values = [x[0] for x in translates]
+            random_translate_id = random.choice(translate_values)
+            # random_translate = await db.select_random_learning_translate(current_dictionary)
+            translate = await db.translate_info(random_translate_id)
             previous_translate = await db.select_last_learning_translate(tg_id)
             ################################################################################
 
-            if random_translate[0] == previous_translate:
+            if random_translate_id == previous_translate:
                 pass
             else:
-                translate_id = random_translate[0]
-                english_word = random_translate[1]
-                russian_word = random_translate[2]
-                dictionary_id = random_translate[3]
-
+                translate_id = random_translate_id
+                english_word = translate[1]
+                russian_word = translate[2]
+                dictionary_id = translate[3]
+                # Stopped here!!!!
                 await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
 
                 await ChooseResponse.SetChooseResponse.set()

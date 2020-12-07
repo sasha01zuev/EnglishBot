@@ -90,6 +90,12 @@ class Database:
         """
         return await self.pool.fetch(sql, dictionary_id, word)
 
+    async def translate_info(self, translate_id):
+        sql = """
+        SELECT * FROM translate WHERE translate_id = $1;
+        """
+        return await self.pool.fetchrow(sql, translate_id)
+
     async def select_last_translate(self, dictionary_id):
         sql = """
         SELECT * FROM translates WHERE dictionary_id = $1 ORDER BY id DESC LIMIT 1;
@@ -152,10 +158,7 @@ class Database:
         """
         return await self.pool.fetchval(sql, user_id)
 
-
-
     # LEARNING PROCCESS REQUESTS
-
 
     async def select_learning_translates(self, dictionary_id):
         sql = """
@@ -171,10 +174,23 @@ class Database:
             """
             await self.pool.execute(sql, dictionary_id, translate_id)
         except:
-            sql = """
-            UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
-            """
-            await self.pool.execute(sql, dictionary_id, translate_id)
+            try:
+                sql = """
+                UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
+                """
+                await self.pool.execute(sql, dictionary_id, translate_id)
+            except:
+                print('except')
+                sql = """
+                INSERT INTO first_repeat(dictionary_id, translate_id, approach_date)
+                VALUES ($1, $2, NOW() + interval '30 minute');
+                """
+                await self.pool.execute(sql, dictionary_id, translate_id)
+
+                sql = """
+                DELETE FROM learn_translate WHERE translate_id = $1;
+                """
+                await self.pool.execute(sql, translate_id)
 
     async def select_random_learning_translate(self, dictionary_id):
         sql = """
@@ -196,3 +212,28 @@ class Database:
         """
         return await self.pool.fetchval(sql, user_id)
 
+    async def current_datetime(self):
+        sql = """
+        SELECT NOW();
+        """
+        return await self.pool.fetchval(sql)
+
+    async def learning_translates(self, dictionary_id):
+        sql = """
+        SELECT translate_id FROM learn_translate WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM first_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM second_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1) 
+        UNION
+        SELECT translate_id FROM third_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM fourth_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM fifth_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM sixth_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        UNION
+        SELECT translate_id FROM seventh_repeat WHERE (approach_date < NOW()) AND (dictionary_id = $1)
+        """
+        return await self.pool.fetch(sql, dictionary_id)

@@ -1,5 +1,5 @@
 import asyncio
-
+import random
 from utils.db_api.postgresql import Database
 
 
@@ -28,14 +28,23 @@ async def test():
     # learning_translates = await db.select_learning_translates(127)
     # print(learning_translates)
 
-    #
     # import datetime
-    #
+    # current_datetime = await db.test()
+    # current_datetime2 = await db.test2()
+    # print(current_datetime.minute)
+    # print(current_datetime2)
+    # print(current_datetime2 == current_datetime)
+
+
     # print(learning_translates[0][2].year)
     # print(datetime.date.today())
     # print(learning_translates[0][2] == datetime.date)
 
-    await db.set_learning_translate(129, 26)
+    # await db.set_learning_translate(129, 26)
+
+    # translates = await db.learning_translates(131)
+    # translate_values = [x[0] for x in translates]
+    # print(random.choice(translate_values))
 
     print("Success!")
 
