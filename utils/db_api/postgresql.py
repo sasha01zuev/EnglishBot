@@ -92,7 +92,7 @@ class Database:
 
     async def translate_info(self, translate_id):
         sql = """
-        SELECT * FROM translate WHERE translate_id = $1;
+        SELECT * FROM translates WHERE id = $1;
         """
         return await self.pool.fetchrow(sql, translate_id)
 
@@ -167,30 +167,116 @@ class Database:
         return await self.pool.fetch(sql, dictionary_id)
 
     async def set_learning_translate(self, dictionary_id, translate_id):
-        try:
-            sql = """
-            INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
-            VALUES ($1, $2, NOW());
-            """
-            await self.pool.execute(sql, dictionary_id, translate_id)
-        except:
+        sql = """
+        INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
+        VALUES ($1, $2, NOW());
+        """
+        await self.pool.execute(sql, dictionary_id, translate_id)
+
+    async def update_translate(self, translate_id, dictionary_id, repetition_number):
+        if repetition_number == 0:
             try:
                 sql = """
-                UPDATE learn_translate SET times_repeat = times_repeat + 1 WHERE translate_id = $2 AND dictionary_id = $1;
+                UPDATE learn_translate SET times_repeat = times_repeat + 1 
+                WHERE translate_id = $1 AND dictionary_id = $2;
                 """
-                await self.pool.execute(sql, dictionary_id, translate_id)
+                await self.pool.execute(sql, translate_id, dictionary_id)
             except:
-                print('except')
                 sql = """
                 INSERT INTO first_repeat(dictionary_id, translate_id, approach_date)
-                VALUES ($1, $2, NOW() + interval '30 minute');
+                VALUES ($2, $1, NOW() + interval '30 minute')
                 """
-                await self.pool.execute(sql, dictionary_id, translate_id)
+                await self.pool.execute(sql, translate_id, dictionary_id)
 
                 sql = """
-                DELETE FROM learn_translate WHERE translate_id = $1;
+                DELETE FROM learn_translate WHERE translate_id = $1
                 """
                 await self.pool.execute(sql, translate_id)
+        if repetition_number == 1:
+            sql = """
+            INSERT INTO second_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '8 hour')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM first_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        if repetition_number == 2:
+            sql = """
+            INSERT INTO third_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '1 day')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM second_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        if repetition_number == 3:
+            sql = """
+            INSERT INTO fourth_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '3 day')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM third_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        if repetition_number == 4:
+            sql = """
+            INSERT INTO fifth_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '7 day')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM fourth_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        if repetition_number == 5:
+            sql = """
+            INSERT INTO sixth_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '14 day')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM fifth_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        if repetition_number == 6:
+            sql = """
+            INSERT INTO seventh_repeat(dictionary_id, translate_id, approach_date)
+            VALUES ($2, $1, NOW() + interval '31 day')
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM sixth_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        elif repetition_number == 7:
+            sql = """
+            INSERT INTO learned_translates(dictionary_id, translate_id)
+            VALUES ($2, $1)
+            """
+            await self.pool.execute(sql, translate_id, dictionary_id)
+
+            sql = """
+            DELETE FROM seventh_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+        else:
+            pass
+
+    async def check_repetition_number(self, translate_id):
+        sql = """
+        SELECT repetition_number FROM translates WHERE id = $1;
+        """
+        return await self.pool.fetchval(sql, translate_id)
 
     async def select_random_learning_translate(self, dictionary_id):
         sql = """

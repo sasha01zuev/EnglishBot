@@ -46,6 +46,12 @@ async def test():
     # translate_values = [x[0] for x in translates]
     # print(random.choice(translate_values))
 
+    # repetition_number = await db.check_repition_number(41)
+    # print(repetition_number)
+
+    # translate = await db.translate_info(40)
+    # print(translate)
+
     print("Success!")
 
 

@@ -20,7 +20,9 @@ async def know_translate(call: CallbackQuery, callback_data: dict, state: FSMCon
 
     ########################################################################
     #                        DATABASE Queries                              #
-    await db.set_learning_translate(dictionary_id, translate_id)
+    repetition_number = await db.check_repetition_number(translate_id)
+    await db.update_translate(translate_id, dictionary_id, repetition_number)
+    # await db.set_learning_translate(dictionary_id, translate_id)
     ########################################################################
 
     await call.message.answer(_("Учим дальше?"), reply_markup=check_continuation_learning_keyboard)
