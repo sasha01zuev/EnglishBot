@@ -44,11 +44,12 @@ async def set_russian_word(message: Message, state: FSMContext):
         #                        DATABASE Queries                              #
         current_dictionary = await db.select_current_dictionary(tg_id)
         await db.add_translate(english_word, russian_word, current_dictionary)
-
+        print("#1 Сюда доходит")
         translate = await db.select_last_translate(current_dictionary)
         translate_id = translate[0]
-
+        print("#2 Сюда доходит")
         await db.set_learning_translate(current_dictionary, translate_id)
+        print("#3 Сюда доходит")
         #                                                                      #
         ########################################################################
         await message.answer(_("Добавлен новый перевод:\n"

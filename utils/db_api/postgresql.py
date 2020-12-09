@@ -168,7 +168,7 @@ class Database:
 
     async def set_learning_translate(self, dictionary_id, translate_id):
         sql = """
-        INSERT INTO learn_translate(dictionary_id, translate_id, current_date_time)
+        INSERT INTO learn_translate(dictionary_id, translate_id, approach_date)
         VALUES ($1, $2, NOW());
         """
         await self.pool.execute(sql, dictionary_id, translate_id)
