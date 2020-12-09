@@ -21,6 +21,7 @@ async def know_translate(call: CallbackQuery, callback_data: dict, state: FSMCon
     ########################################################################
     #                        DATABASE Queries                              #
     repetition_number = await db.check_repetition_number(translate_id)
+    print("#1 Repitition number =", repetition_number)
     await db.update_translate(translate_id, dictionary_id, repetition_number)
     # await db.set_learning_translate(dictionary_id, translate_id)
     ########################################################################

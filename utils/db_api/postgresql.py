@@ -147,7 +147,8 @@ class Database:
 
     async def set_user_parameters(self, user_id, reverse_translate, user_language):
         sql = """
-        INSERT INTO user_parameters(user_id, registration_date, last_action, reverse_translate, user_language)
+        INSERT INTO user_parameters(user_id, registration_date, last_action, 
+        reverse_translate, user_language)
         VALUES ($1,NOW(),NOW(),$2, $3);
         """
         await self.pool.execute(sql, user_id, reverse_translate, user_language)
@@ -192,6 +193,11 @@ class Database:
                 DELETE FROM learn_translate WHERE translate_id = $1
                 """
                 await self.pool.execute(sql, translate_id)
+
+                sql = """
+                UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
+                """
+                await self.pool.execute(sql, translate_id)
         if repetition_number == 1:
             sql = """
             INSERT INTO second_repeat(dictionary_id, translate_id, approach_date)
@@ -201,6 +207,11 @@ class Database:
 
             sql = """
             DELETE FROM first_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
             """
             await self.pool.execute(sql, translate_id)
         if repetition_number == 2:
@@ -214,6 +225,11 @@ class Database:
             DELETE FROM second_repeat WHERE translate_id = $1
             """
             await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
+            """
+            await self.pool.execute(sql, translate_id)
         if repetition_number == 3:
             sql = """
             INSERT INTO fourth_repeat(dictionary_id, translate_id, approach_date)
@@ -223,6 +239,11 @@ class Database:
 
             sql = """
             DELETE FROM third_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
             """
             await self.pool.execute(sql, translate_id)
         if repetition_number == 4:
@@ -236,6 +257,11 @@ class Database:
             DELETE FROM fourth_repeat WHERE translate_id = $1
             """
             await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
+            """
+            await self.pool.execute(sql, translate_id)
         if repetition_number == 5:
             sql = """
             INSERT INTO sixth_repeat(dictionary_id, translate_id, approach_date)
@@ -245,6 +271,11 @@ class Database:
 
             sql = """
             DELETE FROM fifth_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
             """
             await self.pool.execute(sql, translate_id)
         if repetition_number == 6:
@@ -258,6 +289,11 @@ class Database:
             DELETE FROM sixth_repeat WHERE translate_id = $1
             """
             await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
+            """
+            await self.pool.execute(sql, translate_id)
         elif repetition_number == 7:
             sql = """
             INSERT INTO learned_translates(dictionary_id, translate_id)
@@ -267,6 +303,11 @@ class Database:
 
             sql = """
             DELETE FROM seventh_repeat WHERE translate_id = $1
+            """
+            await self.pool.execute(sql, translate_id)
+
+            sql = """
+            UPDATE translates SET repetition_number = repetition_number + 1 WHERE id = $1;
             """
             await self.pool.execute(sql, translate_id)
         else:
@@ -285,13 +326,13 @@ class Database:
         """
         return await self.pool.fetchrow(sql, dictionary_id)
 
-    async def set_last_learning_translate(self, user_id, translate_id):
+    async def set_last_learning_translate_id(self, user_id, translate_id):
         sql = """
         UPDATE user_parameters SET last_learning_translate = $2 WHERE user_id = $1;
         """
         await self.pool.execute(sql, user_id, translate_id)
 
-    async def select_last_learning_translate(self, user_id):
+    async def select_last_learning_translate_id(self, user_id):
         sql = """
         SELECT last_learning_translate FROM user_parameters
         WHERE user_id = $1;
