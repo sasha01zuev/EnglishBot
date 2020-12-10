@@ -19,7 +19,7 @@ async def unknow_translate(call: CallbackQuery, callback_data: dict, state: FSMC
     # translate_id = data.get("translate_id")
     # dictionary_id = data.get("dictionary_id")
 
-    await call.message.answer(_("{english} - {russian}").format(english=english_word, russian=russian_word),
+    await call.message.answer(f"{english_word} - {russian_word}",
                               reply_markup=check_continuation_learning_keyboard)
     # await call.message.answer(_("Учим дальше?"))
 

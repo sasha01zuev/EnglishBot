@@ -5,6 +5,7 @@ from loader import _
 
 bot_settings = InlineKeyboardMarkup(row_width=1,
                                     inline_keyboard=[
+
                                         [
                                             InlineKeyboardButton(text=_("Обратить перевод 🔁"),
                                                                  callback_data=settings_callback.new(
@@ -15,6 +16,18 @@ bot_settings = InlineKeyboardMarkup(row_width=1,
                                             InlineKeyboardButton(text=_("Поменять язык 🌐"),
                                                                  callback_data=settings_callback.new(
                                                                   settings_item="change_language"))
+                                        ],
+                                        [
+                                            InlineKeyboardButton(text=_("Рекомендации ✅"),
+                                                                 callback_data=settings_callback.new(
+                                                                     settings_item="recommendation"
+                                                                 ))
+                                        ],
+                                        [
+                                            InlineKeyboardButton(text=_("Полная инструкция 📄"),
+                                                                 callback_data=settings_callback.new(
+                                                                     settings_item="instruction"
+                                                                 ))
                                         ]
 
                                     ]

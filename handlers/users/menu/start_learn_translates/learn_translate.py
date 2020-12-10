@@ -59,10 +59,6 @@ async def checking_new_translates(message: Message, state: FSMContext):
                                    "Рекомендуем добавить еще!").format(quantity=todays_words_quantity),
                                  reply_markup=shortage_translates_keyboard)
 
-    # elif todays_words_quantity == 0 and past_translates > 0:
-    #     await message.answer(_("У вас остались переводы на заучиваение с прошлых дней.\n"
-    #                            "Количество: {quantity}").format(quantity=past_translates),
-    #                          reply_markup=past_translates_keyboard)
     else:
         # Redirect to main logic for learning translates
         tg_id = message.from_user.id
