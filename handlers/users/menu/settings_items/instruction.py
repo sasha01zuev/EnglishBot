@@ -26,3 +26,7 @@ async def show_instruction(call: CallbackQuery):
                                 "   <b>3. Учить</b>\n"
                                 "Частично логика подбора переводов сделана на основе графика Эббингауза.\n"
                                 "Но саму суть лучше покажет вот эта картинка:"))
+
+    photo_file_id = 'AgACAgIAAxkBAAIqxl_TknrS85hLkQcx6R-bavEeiD-' \
+                    'TAALIrzEbuvWYSv7SS_RabX6UDAFFli4AAwEAAwIAA3kAA-ORBQABHgQ'
+    await call.message.answer_photo(photo_file_id, caption=_('*Время взято от последнего повторения*'))
