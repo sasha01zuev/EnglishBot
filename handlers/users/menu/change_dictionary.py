@@ -8,7 +8,7 @@ from keyboards.inline.buttons.cancel_button import cancel_button
 from keyboards.inline.callback_data import cancel_button_callback
 from keyboards.inline.callback_data import select_dictionary_callback
 from states import ChangeDictionary
-from loader import dp, db, _
+from loader import dp, db
 from utils.misc import rate_limit
 
 
@@ -22,7 +22,7 @@ async def change_dictionary(message: Message):
 
     show_dictionaries_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(
-            text=_("{dict} - текущий словарь 📌").format(
+            text="{dict} - текущий словарь 📌".format(
                 dict=item[2]
             ),
             callback_data=select_dictionary_callback.new(
@@ -37,7 +37,7 @@ async def change_dictionary(message: Message):
     )
     show_dictionaries_keyboard.add(cancel_button)
 
-    await message.answer(_("Выбери словарь из списка:"), reply_markup=show_dictionaries_keyboard)
+    await message.answer("Выбери словарь из списка:", reply_markup=show_dictionaries_keyboard)
     await ChangeDictionary.SetChangeDictionary.set()
 
 
@@ -61,16 +61,16 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
         await db.set_current_dictionary(tg_id, id_selected_dictionary)
         ########################################################################
 
-        await call.answer(_('Выбран словарь "{name_selected_dictionary}"').format(
+        await call.answer('Выбран словарь "{name_selected_dictionary}"'.format(
             name_selected_dictionary=name_selected_dictionary
         ), cache_time=5)
         await call.message.delete()
         await state.finish()
     except asyncpg.exceptions.ForeignKeyViolationError:
-        await call.answer(_("Этого словаря уже не существует!"), show_alert=True, cache_time=5)
+        await call.answer("Этого словаря уже не существует!", show_alert=True, cache_time=5)
         await call.message.delete()
         await state.finish()
     except:
-        await call.answer(_("Упс, какая-то ошибка!"), show_alert=True, cache_time=5)
+        await call.answer("Упс, какая-то ошибка!", show_alert=True, cache_time=5)
         await call.message.delete()
         await state.finish()

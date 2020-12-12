@@ -5,16 +5,16 @@ from aiogram.dispatcher import FSMContext
 from states import CreateNewDict
 
 from keyboards.default import menu
-from loader import dp, db, _
+from loader import dp, db
 
 
 @dp.message_handler(Text("📓Новый словарь"))
 async def new_dictionary(message: Message):
     dictionaries = await db.select_dictionaries(message.from_user.id)
     if len(dictionaries) == 10:
-        await message.answer(_("Вы не можете создать больше 10 словарей!"))
+        await message.answer("Вы не можете создать больше 10 словарей!")
     else:
-        await message.answer(_("Напиши название своего словаря"), reply_markup=ReplyKeyboardRemove())
+        await message.answer("Напиши название своего словаря", reply_markup=ReplyKeyboardRemove())
         await CreateNewDict.SetDictionaryName.set()
 
 
@@ -31,7 +31,7 @@ async def set_dictionary_name(message: Message, state: FSMContext):
     #                                                                      #
     ########################################################################
 
-    await message.answer(_('Вы создали новый словарь "{dictionary_name}"').format(
+    await message.answer('Вы создали новый словарь "{dictionary_name}"'.format(
         dictionary_name=dictionary_name
     ), reply_markup=menu)
     await state.finish()

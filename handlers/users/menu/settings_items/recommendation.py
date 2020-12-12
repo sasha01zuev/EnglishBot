@@ -1,6 +1,6 @@
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 
-from loader import dp, _
+from loader import dp
 
 from keyboards.inline.callback_data import settings_callback
 
@@ -8,17 +8,17 @@ from keyboards.inline.callback_data import settings_callback
 @dp.callback_query_handler(settings_callback.filter(settings_item="recommendation"))
 async def show_recommendation(call: CallbackQuery):
     await call.answer(cache_time=5)
-    await call.message.answer(_('<i>РЕКОМЕНДАЦИИ</i>\n\n'
+    await call.message.answer('<i>РЕКОМЕНДАЦИИ</i>\n\n'
                                 'Чтобы эффективно учить новые слова, рекомендую прочитать несколько советов ниже!\n\n'
                                 '<b>1. Объединяйте слова по тематике</b>\n'
                                 'Как легко запомнить английские слова? Обычно хорошо запоминаются группы слов, '
                                 'относящиеся к одной теме. Поэтому старайтесь разбить слова '
-                                'на группы по 5-10 штук и учить их.'))
+                                'на группы по 5-10 штук и учить их.')
     photo_file_id = 'AgACAgIAAxkBAAIrD1_UEK4AAV3FL-0juj4xvPRS5JwMigACD' \
                     'a4xG7r1oEqrO2UGG5D9-cvDDpguAAMBAAMCAAN4AANzTgQAAR4E'
     await call.message.answer_photo(photo_file_id)
 
-    await call.message.answer(_('<b>2. Используйте ассоциации и персонализацию</b>\n'
+    await call.message.answer('<b>2. Используйте ассоциации и персонализацию</b>\n'
                                 'Этот способ любят многие студенты: чтобы выучить какое-то слово, '
                                 'нужно придумать ассоциацию на русском языке. '
                                 'Например, необходимо запомнить слово obstinacy (упрямство). '
@@ -41,4 +41,4 @@ async def show_recommendation(call: CallbackQuery):
                                 '<b>7. Одно слово - два значения</b>\n'
                                 'Нужно посмотреть не используется ли ваше слово в двух разных значениях. '
                                 'Например: milk - молоко, to milk - доить. '
-                                'Ведь так мы за раз выучили уже два слова, а не одно'))
+                                'Ведь так мы за раз выучили уже два слова, а не одно')

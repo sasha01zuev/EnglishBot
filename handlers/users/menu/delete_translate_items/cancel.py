@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 
 from keyboards.inline.delete_translate_buttons import delete_translate_callback
-from loader import dp, _
+from loader import dp
 
 
 @dp.callback_query_handler(delete_translate_callback.filter(item="cancel"))

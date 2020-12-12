@@ -2,10 +2,10 @@ from aiogram.dispatcher.filters import Command
 from aiogram.types import Message
 
 from keyboards.default import menu
-from loader import dp, _
+from loader import dp
 
 
 @dp.message_handler(Command("menu"))
 async def show_menu(message: Message):
-    await message.answer(_("⬇Выберите пункт ниже⬇"), reply_markup=menu)
+    await message.answer("⬇Выберите пункт ниже⬇", reply_markup=menu)
 

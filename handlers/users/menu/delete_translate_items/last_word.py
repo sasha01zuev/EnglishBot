@@ -5,7 +5,7 @@ from keyboards.default import menu
 from keyboards.inline.callback_data import confirm_callback, delete_translate_callback, select_dictionary_callback
 from keyboards.inline.confirm_buttons import confirm_keyboard
 
-from loader import dp, db, _
+from loader import dp, db
 from states import DeleteLastTranslate
 
 
@@ -23,8 +23,8 @@ async def delete_last_word(call: CallbackQuery):
         english_word = last_translate[1]
         russian_word = last_translate[2]
 
-        await call.message.answer(_("Вы действительно хотите удалить это перевод?\n"
-                                  "<b>{english_word}</b> - <b>{russian_word}</b>").format(
+        await call.message.answer("Вы действительно хотите удалить это перевод?\n"
+                                  "<b>{english_word}</b> - <b>{russian_word}</b>".format(
             english_word=english_word, russian_word=russian_word
         ), reply_markup=confirm_keyboard)
 
@@ -41,19 +41,19 @@ async def delete_last_word(call: CallbackQuery):
                             dictionary_id=item[3],
                             dictionary_name=item[2]))] for item in select_dictionaries]
             )
-            await call.message.answer(_("Так как вы удалили свой текущий словарь, \n"
-                                      "то вам придется выбрать <i>новый текущий словарь</i>"),
+            await call.message.answer("Так как вы удалили свой текущий словарь, \n"
+                                      "то вам придется выбрать <i>новый текущий словарь</i>",
                                       reply_markup=show_dictionaries_keyboard)
             await DeleteLastTranslate.SetDeleteLastTranslate.set()
             await call.message.delete()
         else:
             await call.message.delete()
-            await call.message.answer(_("У вас нету словарей! Добавьте хоть один словарь."), reply_markup=menu)
+            await call.message.answer("У вас нету словарей! Добавьте хоть один словарь.", reply_markup=menu)
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteLastTranslate.SetDeleteLastTranslate)
 async def accept_deletion(call: CallbackQuery, state: FSMContext):
-    await call.answer(_("Удалено!"), cache_time=5)
+    await call.answer("Удалено!", cache_time=5)
     await call.message.delete()
 
     tg_id = call.from_user.id
@@ -74,7 +74,7 @@ async def accept_deletion(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"),
                            state=DeleteLastTranslate.SetDeleteLastTranslate)
 async def cancel_deletion(call: CallbackQuery, state: FSMContext):
-    await call.answer(_("Отмена"), cache_time=5)
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
 
@@ -90,11 +90,11 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
     #                        DATABASE Queries                              #
     await db.set_current_dictionary(tg_id, id_selected_dictionary)
     ########################################################################
-    await call.answer(_("Выбран словарь '{dict}'").format(
+    await call.answer("Выбран словарь '{dict}'".format(
         dict=name_selected_dictionary
     ), cache_time=5)
     await call.message.delete()
-    await call.message.answer(_("Теперь, чтобы удалить перевод, вы должны его c начала <i>добавить</i>!"),
+    await call.message.answer("Теперь, чтобы удалить перевод, вы должны его c начала <i>добавить</i>!",
                               reply_markup=menu)
 
     await state.finish()

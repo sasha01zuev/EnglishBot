@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery
 
 from keyboards.inline.learning_translates_keyboards import check_continuation_learning_keyboard
 from keyboards.inline.callback_data import learning_response_callback
-from loader import dp, db, _
+from loader import dp, db
 from states import ChooseResponse
 
 
@@ -32,7 +32,7 @@ async def unknow_translate(call: CallbackQuery, callback_data: dict, state: FSMC
     await call.answer()
     await call.message.delete()
 
-    await call.message.answer(_("Учим дальше?"), reply_markup=check_continuation_learning_keyboard)
+    await call.message.answer("Учим дальше?", reply_markup=check_continuation_learning_keyboard)
     # await call.message.answer(_("Учим дальше?"))
 
     await state.finish()

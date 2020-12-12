@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
 from keyboards.inline.callback_data import learning_response_callback
-from loader import dp, db, _
+from loader import dp, db
 from keyboards.inline.learning_translates_keyboards.check_show_translate_response import check_show_translate_keyboard
 from states import ChooseResponse
 

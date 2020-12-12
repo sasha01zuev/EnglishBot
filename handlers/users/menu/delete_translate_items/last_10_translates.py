@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.inline.delete_translate_buttons import delete_translate_callback
-from loader import dp, db, _
+from loader import dp, db
 from keyboards.inline.confirm_buttons import confirm_keyboard
 from keyboards.inline.callback_data import select_translate_callback, confirm_callback
 from states import DeleteTranslate
@@ -37,13 +37,13 @@ async def delete_last_10_translates(call: CallbackQuery):
     )
     show_last_10th_translates_keyboard.row(cancel_button)
 
-    await call.message.answer(_('Последние 10 переводов:'), reply_markup=show_last_10th_translates_keyboard)
+    await call.message.answer('Последние 10 переводов:', reply_markup=show_last_10th_translates_keyboard)
     await DeleteTranslate.SetDeleteTranslate.set()
 
 
 @dp.callback_query_handler(cancel_button_callback.filter(state='True'), state=DeleteTranslate.SetDeleteTranslate)
 async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
-    await call.answer(_("Отмена"), cache_time=5)
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
 
@@ -61,15 +61,15 @@ async def confirm_deletion(call: CallbackQuery, callback_data: dict, state: FSMC
     await state.update_data(russian_word=russian_word)
     await state.update_data(current_dictionary_id=id_selected_dictionary)
 
-    await call.message.answer(_("Вы действительно хотите удалить это перевод?\n"
-                              "<b>{english_word}</b> - <b>{russian_word}</b>").format(
+    await call.message.answer("Вы действительно хотите удалить это перевод?\n"
+                              "<b>{english_word}</b> - <b>{russian_word}</b>".format(
         english_word=english_word, russian_word=russian_word
     ), reply_markup=confirm_keyboard)
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteTranslate.SetDeleteTranslate)
 async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.answer(_("Удалено!"), cache_time=5)
+    await call.answer("Удалено!", cache_time=5)
     await call.message.delete()
 
     await state.update_data()
@@ -89,6 +89,6 @@ async def accept_deletion(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"), state=DeleteTranslate.SetDeleteTranslate)
 async def cancel_deletion(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.answer(_("Отмена"), cache_time=5)
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()

@@ -8,11 +8,11 @@ from aiogram.types import Message, CallbackQuery
 from keyboards.inline.callback_data import start_learning_callback
 from keyboards.inline.learning_translates_keyboards import \
     shortage_translates_keyboard, empty_translates_keyboard, past_translates_keyboard, check_response_keyboard
-from loader import dp, db, _
+from loader import dp, db
 from states import ChooseResponse
 
 
-@dp.message_handler(Text(_("🎯Учить")))
+@dp.message_handler(Text("🎯Учить"))
 async def checking_new_translates(message: Message, state: FSMContext):
     tg_id = message.from_user.id
 
@@ -45,18 +45,18 @@ async def checking_new_translates(message: Message, state: FSMContext):
     print("Quantity: ", todays_words_quantity)
 
     if len(learning_translates) == 0:
-        await message.answer(_('Нету добавленых переводов!'), reply_markup=empty_translates_keyboard)
+        await message.answer('Нету добавленых переводов!', reply_markup=empty_translates_keyboard)
 
     elif todays_words_quantity < 4:
         if past_translates > 0:
-            await message.answer(_("У вас остались переводы на заучиваение с прошлых дней.\n"
+            await message.answer("У вас остались переводы на заучиваение с прошлых дней.\n"
                                    "Количество: {past_translates}\n"
-                                   "Количетсво сегодняшних переводов: {todays_translates}.").format(
+                                   "Количетсво сегодняшних переводов: {todays_translates}.".format(
                 past_translates=past_translates, todays_translates=todays_words_quantity),
                 reply_markup=past_translates_keyboard)
         else:
-            await message.answer(_("Количетсво сегодняшних переводов: {quantity}. "
-                                   "Рекомендуем добавить еще!").format(quantity=todays_words_quantity),
+            await message.answer("Количетсво сегодняшних переводов: {quantity}. "
+                                   "Рекомендуем добавить еще!".format(quantity=todays_words_quantity),
                                  reply_markup=shortage_translates_keyboard)
 
     else:
@@ -138,9 +138,9 @@ async def learning_process(call: CallbackQuery, callback_data: dict, state: FSMC
                 await db.set_last_learning_translate_id(tg_id, translate_id)
                 iteration = False
         except IndexError:
-            await call.message.answer(_("Нету переводов на заучивание!"))
+            await call.message.answer("Нету переводов на заучивание!")
             iteration = False
         except Exception as error:
-            await call.message.answer(_("Неизвестная ошибка"))
+            await call.message.answer("Неизвестная ошибка")
             print(error)
             iteration = False

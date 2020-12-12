@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 
-from loader import dp, db, _
+from loader import dp, db
 from states import Start
 from keyboards.default import menu
 from utils.misc import rate_limit
@@ -26,41 +26,41 @@ async def show_menu(message: Message):
         await db.add_user(tg_id, first_name, full_name, username)
         ########################################################################
 
-        await message.answer(_("Привет, {message}😜 Я вижу ты здесь впервые!\n\n"
+        await message.answer("Привет, {message}😜 Я вижу ты здесь впервые!\n\n"
                                "Вот небольшая инструкция:\n"
                                "    1. Чтобы добавить перевод, сначала нужно создать словарь\n"
                                "    2. В словарь уже можно добавлять переводы\n"
                                "    3. Можно учить!\n\n"
                                "Чтобы понять полностью процесс, рекомендую заглянуть в настройки и посмотреть:\n"
                                "    - Рекомендации\n"
-                               "    - Полная инструкция\n").format(message=message.from_user.first_name))
+                               "    - Полная инструкция\n".format(message=message.from_user.first_name))
         await asyncio.sleep(5)
-        await message.answer(_("Ладно, перейдем к делу ..."))
+        await message.answer("Ладно, перейдем к делу ...")
         await asyncio.sleep(2)
-        await message.answer(_("Для начала тебе нужно добавить свой первый словарь.\n"
-                             "Давай я тебе помогу!"))
+        await message.answer("Для начала тебе нужно добавить свой первый словарь.\n"
+                             "Давай я тебе помогу!")
         await asyncio.sleep(3)
-        await message.answer(_("⬇Напиши название своего первого словаря⬇"))
+        await message.answer("⬇Напиши название своего первого словаря⬇")
 
         await Start.SetDictionary.set()
 
     except asyncpg.exceptions.UniqueViolationError:
-        await message.answer(_("Вы уже зарегистрированы!"), reply_markup=menu)
+        await message.answer("Вы уже зарегистрированы!", reply_markup=menu)
 
 
 @dp.message_handler(state=Start.SetDictionary)
 async def set_dict_name(message: Message, state: FSMContext):
     await state.update_data(dict_name=message.text)
-    await message.answer(_("Отлично! Теперь давай добавим первый перевод."))
+    await message.answer("Отлично! Теперь давай добавим первый перевод.")
     await asyncio.sleep(2)
-    await message.answer(_("Сперва введи слово на английском"))
+    await message.answer("Сперва введи слово на английском")
     await Start.SetEnglishWord.set()
 
 
 @dp.message_handler(state=Start.SetEnglishWord)
 async def set_english_word(message: Message, state: FSMContext):
     await state.update_data(english_word=message.text)
-    await message.answer(_("Теперь введи перевод своего слова"))
+    await message.answer("Теперь введи перевод своего слова")
     await Start.SetRussianWord.set()
 
 
@@ -90,13 +90,13 @@ async def set_russian_word(message: Message, state: FSMContext):
     await db.set_user_parameters(tg_id, False, user_language)
     ########################################################################
 
-    await message.answer(_("Итак, название вашего словаря: \"{dict_name}\"\n"
-                         "Перевод:\n{english_word} - {russian_word}").format(
+    await message.answer("Итак, название вашего словаря: \"{dict_name}\"\n"
+                         "Перевод:\n{english_word} - {russian_word}".format(
         dict_name=dict_name, english_word=english_word, russian_word=russian_word
     ))
 
     await asyncio.sleep(1)
-    await message.answer(_("Теперь ты можешь сам управлять своим переводчиком!\n"
-                         "Напиши /menu чтобы посмотреть список команд."), reply_markup=menu)
+    await message.answer("Теперь ты можешь сам управлять своим переводчиком!\n"
+                         "Напиши /menu чтобы посмотреть список команд.", reply_markup=menu)
 
     await state.finish()

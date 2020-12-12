@@ -18,9 +18,4 @@ logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(
                     level=logging.INFO,
                     )
 
-from middlewares import setup_languages
-# Настроим i18n middleware для работы с многоязычностью
-i18n = setup_languages(dp)
-# Создадим псевдоним для метода gettext
-_ = i18n.gettext
 
