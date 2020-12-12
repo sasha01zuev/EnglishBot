@@ -8,6 +8,7 @@ from keyboards.inline.callback_data import settings_callback
 @dp.callback_query_handler(settings_callback.filter(settings_item="recommendation"))
 async def show_recommendation(call: CallbackQuery):
     await call.answer(cache_time=5)
+    await call.message.delete()
     await call.message.answer('<i>РЕКОМЕНДАЦИИ</i>\n\n'
                                 'Чтобы эффективно учить новые слова, рекомендую прочитать несколько советов ниже!\n\n'
                                 '<b>1. Объединяйте слова по тематике</b>\n'

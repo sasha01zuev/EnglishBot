@@ -8,6 +8,7 @@ from keyboards.inline.callback_data import settings_callback
 @dp.callback_query_handler(settings_callback.filter(settings_item="instruction"))
 async def show_instruction(call: CallbackQuery):
     await call.answer(cache_time=5)
+    await call.message.delete()
     await call.message.answer("<i>ИНСТРУКЦИЯ</i>\n\n"
                                 "Как и в реальной жизни, слова, которые мы изучаем, должны быть где-то записаны.\n"
                                 "Для этого и существуют СЛОВАРИ. Так что первым делом нужно создать словарь\n"
