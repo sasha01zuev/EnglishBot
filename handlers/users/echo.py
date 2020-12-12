@@ -13,3 +13,4 @@ async def echo(message: types.Message):
 async def photo_echo(message: Message):
     await message.answer(_("Я пока-что не принимаю фото! 🤨😲"))
     print(message.photo[-1].file_id)
+
