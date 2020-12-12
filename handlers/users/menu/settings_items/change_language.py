@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery, InlineKeyboardButton
 
-from loader import dp, bot, _
+from loader import dp, bot, _, db
 from utils.misc import rate_limit
 from keyboards.inline.bot_settings_buttons import bot_settings
 from keyboards.inline.select_language import language_keyboard
@@ -20,8 +20,11 @@ async def change_language(call: CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(select_language_callback.filter(lang='en'), state=SelectLanguage.SetLanguage)
 async def set_english_lang(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    tg_id = call.from_user.id
+    lang = callback_data['lang']
     await call.answer("Chosen English language", cache_time=5)
     await call.message.delete()
+    await db.set_user_language(lang, tg_id)
     await state.finish()
     await call.message.answer(_("Выбери язык"), reply_markup=bot_settings)
 

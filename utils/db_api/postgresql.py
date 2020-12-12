@@ -153,9 +153,15 @@ class Database:
         """
         await self.pool.execute(sql, user_id, reverse_translate, user_language)
 
+    async def set_user_language(self, lang, user_id):
+        sql = """
+        UPDATE user_parameters SET user_language = $1 WHERE user_id = $2
+        """
+        await self.pool.execute(sql, lang, user_id)
+
     async def get_user_language(self, user_id):
         sql = """
-        SELECT user_language FROM user_parameters WHERE  user_id = $1;
+        SELECT user_language FROM user_parameters WHERE user_id = $1;
         """
         return await self.pool.fetchval(sql, user_id)
 
