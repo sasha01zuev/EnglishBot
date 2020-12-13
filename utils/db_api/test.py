@@ -4,6 +4,7 @@ from utils.db_api.postgresql import Database
 
 
 async def test():
+    """Test for working with database queries"""
     # await db.add_translate(2, 'english_word', 'russian_word')
 
     # select_dict_for_start = await db.select_dictionary_for_start(609200395)
@@ -34,7 +35,6 @@ async def test():
     # print(current_datetime.minute)
     # print(current_datetime2)
     # print(current_datetime2 == current_datetime)
-
 
     # print(learning_translates[0][2].year)
     # print(datetime.date.today())
