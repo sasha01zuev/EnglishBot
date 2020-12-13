@@ -12,6 +12,6 @@ Asynchronous telegram bot technologies:
 
 The project was made to help people learn foreign words. This is not just a test for added words! The bot has its own training system partially borrowed from the Ebbinghaus graph
 
-![](pictures/Learning_system.png)
+![](/pictures/Learning_system.png)
 
 The main logic is located in the folder with handlers. All DB queries located in utils/db\_api/postgresql.py
