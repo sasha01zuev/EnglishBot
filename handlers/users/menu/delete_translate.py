@@ -7,5 +7,6 @@ from loader import dp
 
 @dp.message_handler(Text("🗑Удалить перевод"))
 async def delete_translate(message: Message):
-    await message.answer("Удаление слов", reply_markup=menu_delete_translate_keyboard)
+    """Show how to delete translate"""
+    await message.answer("Как удаляем? 🙃", reply_markup=menu_delete_translate_keyboard)
 

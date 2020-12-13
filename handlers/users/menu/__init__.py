@@ -5,7 +5,7 @@ from .delete_dictionary import dp
 from .change_dictionary import dp
 from .settings import dp
 from .settings_items.reverse_translate import dp
-from .delete_translate_items.last_word import dp
+from .delete_translate_items.last_translate import dp
 from .delete_translate_items.last_10_translates import dp
 from .delete_dicitonary_items.last_dictionary import dp
 

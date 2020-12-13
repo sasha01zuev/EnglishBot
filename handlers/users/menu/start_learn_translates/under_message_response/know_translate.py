@@ -9,23 +9,20 @@ from states import ChooseResponse
 
 @dp.callback_query_handler(learning_response_callback.filter(is_selected="know"),
                            state=ChooseResponse.SetChooseResponse)
-async def know_translate(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def know_translate(call: CallbackQuery,  state: FSMContext):
+    """Checking stage of translate, updating translate and checking continuation of learning"""
     await call.answer()
     await call.message.delete()
+
     data = await state.get_data()
-    english_word = data.get("english_word")
-    russian_word = data.get("russian_word")
     translate_id = data.get("translate_id")
     dictionary_id = data.get("dictionary_id")
 
     ########################################################################
     #                        DATABASE Queries                              #
-    repetition_number = await db.check_repetition_number(translate_id)
-    print("#1 Repitition number =", repetition_number)
-    await db.update_translate(translate_id, dictionary_id, repetition_number)
-    # await db.set_learning_translate(dictionary_id, translate_id)
+    repetition_number = await db.check_repetition_number(translate_id)  # Stage of translate
+    await db.update_translate(translate_id, dictionary_id, repetition_number)  # Updating translate
     ########################################################################
 
     await call.message.answer("Учим дальше?", reply_markup=check_continuation_learning_keyboard)
-    # await call.message.answer(_("Учим дальше?"))
     await state.finish()

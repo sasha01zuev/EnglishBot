@@ -351,7 +351,7 @@ class Database:
         """
         return await self.pool.fetchval(sql)
 
-    async def learning_translates(self, dictionary_id):
+    async def learning_translates_id(self, dictionary_id):
         sql = """
         SELECT translate_id FROM learn_translate WHERE (approach_date < NOW()) AND (dictionary_id = $1)
         UNION

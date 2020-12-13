@@ -11,11 +11,15 @@ from loader import dp, db
 
 @dp.callback_query_handler(delete_dictionary_callback.filter(item="list"))
 async def show_list_of_dictionaries(call: CallbackQuery):
+    """Show list of user dictionaries from DB"""
     await call.answer(cache_time=5)
-    tg_id = call.from_user.id
+    user_id = call.from_user.id
 
-    select_dictionaries = await db.select_dictionaries(tg_id)
-    current_dictionary = await db.select_current_dictionary(tg_id)
+    ######################################################################
+    #                            DATABASE Queries                        #
+    select_dictionaries = await db.select_dictionaries(user_id)  # fetch all user dictionaries
+    current_dictionary = await db.select_current_dictionary(user_id)  # fetch current user dictionary
+    ######################################################################
 
     show_dictionaries_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -26,14 +30,14 @@ async def show_list_of_dictionaries(call: CallbackQuery):
                 callback_data=select_dictionary_callback.new(
                     dictionary_id=item[0],
                     dictionary_name=item[2]))]
-            if str(item[0]) == str(current_dictionary)
-            else [InlineKeyboardButton(
+            if str(item[0]) == str(current_dictionary)  # Label 📌 near current dictionary
+            else [InlineKeyboardButton(  # Else just show dictionary name
                 text=item[2],
                 callback_data=select_dictionary_callback.new(
                     dictionary_id=item[0],
                     dictionary_name=item[2]))] for item in select_dictionaries]
-    )
-    show_dictionaries_keyboard.add(cancel_button)
+    )  # Generator for generation list of inline buttons with names with all user dictionaries
+    show_dictionaries_keyboard.add(cancel_button)  # Binding inline buttons list of dictionaries with cancel button
     await call.message.answer("Выбери словарь из списка:", reply_markup=show_dictionaries_keyboard)
 
     await call.message.delete()
@@ -42,32 +46,31 @@ async def show_list_of_dictionaries(call: CallbackQuery):
 
 @dp.callback_query_handler(select_dictionary_callback.filter(),
                            state=DeleteListDictionary.SetDeleteDictionary)
-async def deleting_dictionary(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def confirm_deleting_dictionary(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    """Confirm deleting selected dictionary"""
     await call.answer(cache_time=5)
     await call.message.delete()
     dictionary_id = int(callback_data['dictionary_id'])
 
     try:
-        #####################################################################################
-        #                                 DATABASE Queries                                  #
-        dictionary = await db.select_dictionary(dictionary_id)
-        #####################################################################################
+        ###############################################################
+        #                     DATABASE Queries                        #
+        dictionary = await db.select_dictionary(dictionary_id)    # Fetch row of dictionary
+        ###############################################################
 
-        await call.message.answer('Вы действительно хотите удалить словарь '
-                                    '"<b>{dict}</b>" ?\n'
-                                    'Все слова записанные в этот словарь также <i>удалаяются</i>!'.format(
-            dict=dictionary[2]
-        ),
-            reply_markup=confirm_keyboard)
+        await call.message.answer(f'Вы действительно хотите удалить словарь "<b>{dictionary[2]}</b>?"\n'
+                                  'Все слова записанные в этот словарь также <i>удалаяются</i>!',
+                                  reply_markup=confirm_keyboard)    # dictionary[2] - name of dictionary
         await state.update_data(dictionary_id=dictionary[0])
-    except:
-        await call.message.answer("Упс, какая-то ошибка!")
+    except Exception as error:
+        await call.message.answer(f"Упс, неизвестная ошибка!\n{error}")
         await state.finish()
 
 
 @dp.callback_query_handler(confirm_callback.filter(item='accept'),
                            state=DeleteListDictionary.SetDeleteDictionary)
 async def deleting_dictionary(call: CallbackQuery, state: FSMContext):
+    """Deleting dictionary from database"""
     await call.answer("Удалено", cache_time=5)
     await call.message.delete()
 
@@ -76,7 +79,7 @@ async def deleting_dictionary(call: CallbackQuery, state: FSMContext):
 
     #####################################################################################
     #                                 DATABASE Queries                                  #
-    await db.delete_dictionary(dictionary_id)
+    await db.delete_dictionary(dictionary_id)    # Deleting select dictionary from database
     #####################################################################################
 
     await state.finish()
@@ -85,7 +88,8 @@ async def deleting_dictionary(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(cancel_button_callback.filter(state='True'),
                            state=DeleteListDictionary.SetDeleteDictionary)
 async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
-    await call.answer(_("Отмена"), cache_time=5)
+    """Cancel choosing a dictionary for deleting"""
+    await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
 
@@ -93,6 +97,7 @@ async def cancel_choose_button(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(confirm_callback.filter(item="cancel"),
                            state=DeleteListDictionary.SetDeleteDictionary)
 async def cancel_deletion(call: CallbackQuery, state: FSMContext):
+    """Cancel deleting a dictionary"""
     await call.answer("Отмена", cache_time=5)
     await call.message.delete()
     await state.finish()
