@@ -5,6 +5,7 @@ Vocabulary learning assistant bot
 
 Asynchronous telegram bot technologies:
 
+*   Python 3.8.5
 *   Aiogram 2.9.2
 *   Async DB PostgreSQL - Asyncpg 0.21.0
 
