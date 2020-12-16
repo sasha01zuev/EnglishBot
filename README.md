@@ -16,3 +16,4 @@ The project was made to help people learn foreign words. This is not just a test
 ![](/pictures/Learning_system.png)
 
 The main logic is located in the folder with handlers. All DB queries located in utils/db\_api/postgresql.py
+Telegram-bot: https://t.me/VoLeA_bot?start=123
