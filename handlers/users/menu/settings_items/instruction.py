@@ -29,8 +29,8 @@ async def show_instruction(call: CallbackQuery):
                               "Частично логика подбора переводов сделана на основе графика Эббингауза.\n"
                               "Но саму суть лучше покажет вот эта картинка:")
 
-    photo_file_id = 'AgACAgIAAxkBAAIqxl_TknrS85hLkQcx6R-bavEeiD-' \
-                    'TAALIrzEbuvWYSv7SS_RabX6UDAFFli4AAwEAAwIAA3kAA-ORBQABHgQ'
+    photo_file_id = 'AgACAgIAAxkBAAMhX9pPF8Z346WetcVkY6Sw84IcVG8AAk-x' \
+                    'MRu1ldBKhSPnUXGjbW5n3mGaLgADAQADAgADeQADVU8CAAEeBA'
     await call.message.answer_photo(photo_file_id, caption='*Время взято от последнего повторения*')  # Send picture
 
 
@@ -57,6 +57,6 @@ async def show_instruction(message: Message):
                          "Частично логика подбора переводов сделана на основе графика Эббингауза.\n"
                          "Но саму суть лучше покажет вот эта картинка:")
 
-    photo_file_id = 'AgACAgIAAxkBAAIqxl_TknrS85hLkQcx6R-bavEeiD-' \
-                    'TAALIrzEbuvWYSv7SS_RabX6UDAFFli4AAwEAAwIAA3kAA-ORBQABHgQ'
+    photo_file_id = 'AgACAgIAAxkBAAMhX9pPF8Z346WetcVkY6Sw84IcVG8AAk-xM' \
+                    'Ru1ldBKhSPnUXGjbW5n3mGaLgADAQADAgADeQADVU8CAAEeBA'
     await message.answer_photo(photo_file_id, caption='*Время взято от последнего повторения*')  # Send picture

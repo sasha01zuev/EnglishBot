@@ -1,4 +1,5 @@
 from loader import bot
+from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dp):
@@ -6,7 +7,7 @@ async def on_startup(dp):
 
     import middlewares
     middlewares.setup(dp)
-
+    await set_default_commands(dp)
     await on_startup_notify(dp)
 
 

@@ -16,8 +16,8 @@ async def show_recommendations(call: CallbackQuery):
                               'Как легко запомнить английские слова? Обычно хорошо запоминаются группы слов, '
                               'относящиеся к одной теме. Поэтому старайтесь разбить слова '
                               'на группы по 5-10 штук и учить их.')
-    photo_file_id = 'AgACAgIAAxkBAAIrD1_UEK4AAV3FL-0juj4xvPRS5JwMigACD' \
-                    'a4xG7r1oEqrO2UGG5D9-cvDDpguAAMBAAMCAAN4AANzTgQAAR4E'
+    photo_file_id = 'AgACAgIAAxkBAAMdX9pOo-4VZiYhKoW-VLM8Z-zeyFMAAlCxMRu1ld' \
+                    'BKyaKqlqhaqZuO5GybLgADAQADAgADeAADIWcAAh4E'
     await call.message.answer_photo(photo_file_id)  # Send picture
 
     await call.message.answer('<b>2. Используйте ассоциации и персонализацию</b>\n'
@@ -56,8 +56,8 @@ async def show_recommendations(message: Message):
                          'Как легко запомнить английские слова? Обычно хорошо запоминаются группы слов, '
                          'относящиеся к одной теме. Поэтому старайтесь разбить слова '
                          'на группы по 5-10 штук и учить их.')
-    photo_file_id = 'AgACAgIAAxkBAAIrD1_UEK4AAV3FL-0juj4xvPRS5JwMigACD' \
-                    'a4xG7r1oEqrO2UGG5D9-cvDDpguAAMBAAMCAAN4AANzTgQAAR4E'
+    photo_file_id = 'AgACAgIAAxkBAAMdX9pOo-4VZiYhKoW-VLM8Z-zey' \
+                    'FMAAlCxMRu1ldBKyaKqlqhaqZuO5GybLgADAQADAgADeAADIWcAAh4E'
     await message.answer_photo(photo_file_id)  # Send picture
 
     await message.answer('<b>2. Используйте ассоциации и персонализацию</b>\n'
