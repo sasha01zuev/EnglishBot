@@ -8,6 +8,7 @@ from loader import dp
 async def reverse_translate(call: CallbackQuery):
     """Functional not done yet!"""
     await call.answer("Пока что такое не умею 😔", show_alert=True, cache_time=5)
+    await call.message.delete()
 
 
 
