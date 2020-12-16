@@ -9,13 +9,18 @@ class SetDBMessage(BaseMiddleware):
 
         user_id = message.from_user.id
         message_text = message.text
-
-        await db.add_message(user_id, message_text)
-        await db.add_last_action(user_id)
+        try:
+            await db.add_message(user_id, message_text)
+            await db.add_last_action(user_id)
+        except:
+            print("Пользователь еще не зарегистрирован")
 
     async def on_process_callback_query(self, cq: types.CallbackQuery, data: dict):
         user_id = cq.from_user.id
         message_text = str(data['callback_data'])
 
-        await db.add_message(user_id, message_text)
-        await db.add_last_action(user_id)
+        try:
+            await db.add_message(user_id, message_text)
+            await db.add_last_action(user_id)
+        except:
+            print("Пользователь еще не зарегистрирован")

@@ -45,7 +45,7 @@ async def start(message: Message):
         await Start.SetDictionary.set()
 
     except asyncpg.exceptions.UniqueViolationError:
-        """It raised when user try to click /start command"""
+        """It raised when registered user try to click /start command"""
         await message.answer("Вы уже зарегистрированы!", reply_markup=menu)
 
 
@@ -97,7 +97,7 @@ async def set_russian_word(message: Message, state: FSMContext):
     ########################################################################
 
     await message.answer(f"Итак, название вашего словаря: \"{dict_name}\"\n"
-                         "Перевод:\n{english_word} - {russian_word}")
+                         f"Перевод:\n{english_word} - {russian_word}")
     await asyncio.sleep(1)
     await message.answer("Теперь ты можешь сам управлять своим переводчиком!\n"
                          "Напиши /menu чтобы посмотреть список команд.", reply_markup=menu)
