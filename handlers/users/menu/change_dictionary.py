@@ -64,7 +64,7 @@ async def changing_dictionary(call: CallbackQuery, callback_data: dict, state: F
         await db.set_current_dictionary(user_id, id_selected_dictionary)
         ########################################################################
 
-        await call.answer('Выбран словарь "{name_selected_dictionary}"', cache_time=5)
+        await call.answer(f'Выбран словарь "{name_selected_dictionary}"', cache_time=5)
         await call.message.delete()
         await state.finish()
     except asyncpg.exceptions.ForeignKeyViolationError:
