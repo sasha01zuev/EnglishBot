@@ -74,6 +74,7 @@ async def checking_new_translates(message: Message, state: FSMContext):
         current_dictionary = await db.select_current_dictionary(user_id)
         translates = await db.learning_translates_id(current_dictionary)  # Fetch available translates
         translate_values = [x[0] for x in translates]    # Fetch ID's from available translates
+        print(translate_values)
         random_translate_id = random.choice(translate_values)   # Random choice from ID's
         translate = await db.translate_info(random_translate_id)    # Fetch translate row of random available ID
         ################################################################################
@@ -83,7 +84,8 @@ async def checking_new_translates(message: Message, state: FSMContext):
         russian_word = translate[2]
         dictionary_id = translate[3]
 
-        await message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)  # Translation knowledge test
+        await message.answer(f'{random.choice((english_word, russian_word))} - ?',
+                             reply_markup=check_response_keyboard)  # Translation knowledge test
         await ChooseResponse.SetChooseResponse.set()
         await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
                                 dictionary_id=dictionary_id)
@@ -120,7 +122,8 @@ async def learning_process(call: CallbackQuery, state: FSMContext):
                 russian_word = translate[2]
                 dictionary_id = translate[3]
 
-                await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)  # Test
+                await call.message.answer(f'{random.choice((english_word, russian_word))} - ?',
+                                          reply_markup=check_response_keyboard)  # Test
                 await ChooseResponse.SetChooseResponse.set()
                 await state.update_data(english_word=english_word, russian_word=russian_word,
                                         translate_id=translate_id, dictionary_id=dictionary_id)
@@ -135,8 +138,8 @@ async def learning_process(call: CallbackQuery, state: FSMContext):
                 english_word = translate[1]
                 russian_word = translate[2]
                 dictionary_id = translate[3]
-
-                await call.message.answer(f'{english_word} - ?', reply_markup=check_response_keyboard)
+                await call.message.answer(f'{random.choice((english_word, russian_word))} - ?',
+                                          reply_markup=check_response_keyboard)
                 await ChooseResponse.SetChooseResponse.set()
                 await state.update_data(english_word=english_word, russian_word=russian_word, translate_id=translate_id,
                                         dictionary_id=dictionary_id)
