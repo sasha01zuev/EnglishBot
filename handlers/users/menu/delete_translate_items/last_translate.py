@@ -21,15 +21,20 @@ async def delete_last_word(call: CallbackQuery):
         last_translate = await db.select_last_translate(current_dictionary)  # Last translate from current dictionary
         ######################################################################
 
-        english_word = last_translate[1]
-        russian_word = last_translate[2]
+        print(last_translate)
+        if last_translate:
+            english_word = last_translate[1]
+            russian_word = last_translate[2]
 
-        await call.message.answer(f"Вы действительно хотите удалить это перевод?\n"
-                                  f"<b>{english_word}</b> - <b>{russian_word}</b>",
-                                  reply_markup=confirm_keyboard)  # Query confirmation of deletion of translate
+            await call.message.answer(f"Вы действительно хотите удалить это перевод?\n"
+                                      f"<b>{english_word}</b> - <b>{russian_word}</b>",
+                                      reply_markup=confirm_keyboard)  # Query confirmation of deletion of translate
 
-        await DeleteLastTranslate.SetDeleteLastTranslate.set()
-        await call.message.delete()
+            await DeleteLastTranslate.SetDeleteLastTranslate.set()
+            await call.message.delete()
+        else:
+            await call.message.delete()
+            await call.message.answer('Нету переводов!')
     except TypeError:
         select_dictionaries = await db.select_dictionaries(user_id)    # All user dictionaries
         if len(select_dictionaries) > 0:
@@ -51,6 +56,7 @@ async def delete_last_word(call: CallbackQuery):
             """It raised when quantity of dictionaries equals 0"""
             await call.message.delete()
             await call.message.answer("У вас нету словарей! Добавьте хоть один словарь.", reply_markup=menu)
+
 
 
 @dp.callback_query_handler(confirm_callback.filter(item="accept"), state=DeleteLastTranslate.SetDeleteLastTranslate)
